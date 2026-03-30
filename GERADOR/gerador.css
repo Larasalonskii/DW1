@@ -1,0 +1,217 @@
+:root {
+    --rosa: #ff69b4;
+    --rosa-escuro: #c71585;
+    --preto: #0f0f0f;
+    --cinza: #1a1a1a;
+    --borda: #2a2a2a;
+    --texto: #eaeaea;
+}
+
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* BODY CENTRALIZADO */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: radial-gradient(circle at top, #1a1a1a, #0f0f0f);
+    color: var(--texto);
+
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    padding: 20px;
+}
+
+/* CONTAINER PRINCIPAL */
+.container {
+    width: 100%;
+    max-width: 900px;
+
+    background: var(--cinza);
+    padding: 30px;
+    border-radius: 18px;
+
+    margin: 0 auto;
+
+    border: 1px solid rgba(255,105,180,0.4);
+
+    box-shadow:
+        0 0 10px rgba(255,105,180,0.3),
+        0 0 25px rgba(255,105,180,0.2),
+        0 0 60px rgba(255,105,180,0.15),
+        0 10px 30px rgba(0,0,0,0.8);
+
+    transition: 0.3s;
+}
+
+/* HOVER CONTAINER */
+.container:hover {
+    box-shadow:
+        0 0 15px rgba(255,105,180,0.5),
+        0 0 40px rgba(255,105,180,0.3),
+        0 0 80px rgba(255,105,180,0.2),
+        0 15px 40px rgba(0,0,0,0.9);
+}
+
+/* TITULO */
+h1 {
+    text-align: center;
+    color: var(--rosa);
+    margin-bottom: 25px;
+    letter-spacing: 1px;
+}
+
+/* LABEL */
+label {
+    display: block;
+    margin-bottom: 6px;
+    color: var(--rosa);
+    font-weight: 600;
+}
+
+/* INPUT */
+input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+
+    background: #111;
+    border: 1px solid var(--borda);
+    border-radius: 8px;
+    color: white;
+
+    transition: 0.25s;
+}
+
+/* INPUT NEON */
+input:focus {
+    outline: none;
+    border-color: var(--rosa);
+    box-shadow:
+        0 0 5px var(--rosa),
+        0 0 15px rgba(255,105,180,0.4);
+}
+
+/* TEXTAREA */
+textarea {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+
+    background: #0a0a0a;
+    color: #f1f1f1;
+
+    border: 1px solid var(--borda);
+
+    font-family: "Courier New", monospace;
+    font-size: 13px;
+    line-height: 1.5;
+
+    resize: vertical;
+    outline: none;
+
+    transition: 0.25s;
+}
+
+/* TEXTAREA NEON */
+textarea:focus {
+    border-color: var(--rosa);
+    box-shadow:
+        0 0 5px var(--rosa),
+        0 0 20px rgba(255,105,180,0.5);
+}
+
+/* TAMANHOS */
+#inputAtributos {
+    min-height: 180px;
+}
+
+#saida {
+    min-height: 400px;
+    background: #050505;
+    border: 1px dashed var(--rosa);
+    color: #ffb6d9;
+}
+
+/* BOTÕES */
+.botoes {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 20px 0;
+}
+
+button {
+    background: transparent;
+    color: var(--rosa);
+    border: 1px solid var(--rosa);
+
+    padding: 8px 16px;
+    border-radius: 8px;
+
+    cursor: pointer;
+    transition: 0.25s;
+
+    font-size: 13px;
+}
+
+/* HOVER BOTÃO */
+button:hover {
+    background: var(--rosa);
+    color: white;
+
+    box-shadow:
+        0 0 10px var(--rosa),
+        0 0 25px rgba(255,105,180,0.6);
+
+    transform: translateY(-2px);
+}
+
+/* CLICK */
+button:active {
+    transform: scale(0.96);
+}
+
+/* SCROLL */
+textarea::-webkit-scrollbar {
+    width: 8px;
+}
+
+textarea::-webkit-scrollbar-thumb {
+    background: var(--rosa);
+    border-radius: 10px;
+}
+
+/* PADRONIZA TUDO IGUAL AO CÓDIGO */
+body {
+    font-family: "Courier New", monospace;
+    color: #ffb6d9;
+}
+
+/* TÍTULOS */
+h1 {
+    color: #ffb6d9;
+}
+
+/* LABEL */
+label {
+    color: #ffb6d9;
+}
+
+/* INPUTS */
+input, textarea {
+    font-family: "Courier New", monospace;
+    color: #ffb6d9;
+}
+
+/* PLACEHOLDER */
+input::placeholder,
+textarea::placeholder {
+    color: #ffb6d9aa;
+}
