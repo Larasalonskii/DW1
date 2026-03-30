@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bhaskara</title>
+    <link rel="stylesheet" href="imcc.css">
+</head>
+
+<body>
+
+    <header>
+        Índice de Massa Corporal
+    </header>
+
+    <main>
+        <section>
+            <h1>IMC</h1>
+
+            <label for="inputpeso" id="labelDoInputpeso">Peso (em kg): </label>
+            <input type="number" id="inputpeso">
+
+            <label for="inputaltura">Altura (em metros): </label>
+            <input type="number" id="inputaltura">
+
+
+            <button onclick="funcaoCalcular()">Calcular</button>
+
+            <div class="resultado">
+                <p><strong>IMC:</strong> <span id="respimc">0</span></p>
+                <p><strong>Classificação:</strong> <span id="respclassificacao">...</span></p>
+            </div>
+        </section>
+    </main>
+
+    <footer id="footer">
+        <span id="mensagem">Preencha os valores e calcule</span>
+    </footer>
+
+    <script src="imc.js"></script>
+
+</body>
+
+</html>
