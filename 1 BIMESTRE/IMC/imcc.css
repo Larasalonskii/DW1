@@ -133,3 +133,14 @@ footer {
 footer.erro {
     color: var(--rosa);
 }
+
+#aviso {
+    display: none;
+    margin-top: 15px;
+    padding: 10px;
+    background-color: red;
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    text-align: center;
+}
