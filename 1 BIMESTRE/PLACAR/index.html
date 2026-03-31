@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Placar de Jogo</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #4a6cf7, #6a8cff);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  color: white;
+}
+
+h1 {
+  margin-bottom: 40px;
+  font-size: 40px;
+}
+
+.container {
+  display: flex;
+  gap: 40px;
+}
+
+.card {
+  background: white;
+  color: black;
+  padding: 30px;
+  border-radius: 20px;
+  width: 200px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+input {
+  border: none;
+  font-size: 18px;
+  text-align: center;
+  margin-bottom: 15px;
+  outline: none;
+  width: 100%;
+}
+
+.pontos {
+  font-size: 80px;
+  font-weight: 600;
+  margin: 15px 0;
+}
+
+.sets {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.botoes {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+button {
+  background: linear-gradient(135deg, #4a6cf7, #6a8cff);
+  border: none;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+.reset {
+  margin-top: 30px;
+  padding: 12px 25px;
+  border-radius: 12px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Placar de Jogo</h1>
+
+<div class="container">
+
+  <div class="card">
+    <input id="nome1" value="Time A">
+    
+    <div class="pontos" id="p1">0</div>
+
+    <div class="sets">
+      Sets: <span id="s1">0</span>
+    </div>
+
+    <div class="botoes">
+      <button onclick="alterar(1, 1)">+1</button>
+      <button onclick="alterar(1, -1)">-1</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <input id="nome2" value="Time B">
+    
+    <div class="pontos" id="p2">0</div>
+
+    <div class="sets">
+      Sets: <span id="s2">0</span>
+    </div>
+
+    <div class="botoes">
+      <button onclick="alterar(2, 1)">+1</button>
+      <button onclick="alterar(2, -1)">-1</button>
+    </div>
+  </div>
+
+</div>
+
+<button class="reset" onclick="resetar()">Resetar</button>
+
+<script>
+let pontos = [0, 0];
+let sets = [0, 0];
+
+function alterar(time, valor) {
+  let i = time - 1;
+  let o = i === 0 ? 1 : 0;
+
+  pontos[i] += valor;
+
+  if (pontos[i] < 0) pontos[i] = 0;
+
+  verificarSet();
+  atualizar();
+}
+
+function verificarSet() {
+  let p1 = pontos[0];
+  let p2 = pontos[1];
+
+  // regra do vôlei: 25 pontos + diferença de 2
+  if ((p1 >= 25 || p2 >= 25) && Math.abs(p1 - p2) >= 2) {
+
+    if (p1 > p2) sets[0]++;
+    else sets[1]++;
+
+    pontos = [0, 0];
+  }
+}
+
+function atualizar() {
+  document.getElementById("p1").innerText = pontos[0];
+  document.getElementById("p2").innerText = pontos[1];
+
+  document.getElementById("s1").innerText = sets[0];
+  document.getElementById("s2").innerText = sets[1];
+}
+
+function resetar() {
+  pontos = [0, 0];
+  sets = [0, 0];
+  atualizar();
+}
+
+atualizar();
+</script>
+
+</body>
+</html>
