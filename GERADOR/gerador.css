@@ -16,9 +16,9 @@
 
 /* BODY CENTRALIZADO */
 body {
-    font-family: 'Segoe UI', sans-serif;
+    font-family: "Courier New", monospace; /* já deixa padrão código */
     background: radial-gradient(circle at top, #1a1a1a, #0f0f0f);
-    color: var(--texto);
+    color: #ffb6d9;
 
     min-height: 100vh;
     display: flex;
@@ -62,16 +62,13 @@ body {
 /* TITULO */
 h1 {
     text-align: center;
-    color: var(--rosa);
     margin-bottom: 25px;
-    letter-spacing: 1px;
 }
 
 /* LABEL */
 label {
     display: block;
     margin-bottom: 6px;
-    color: var(--rosa);
     font-weight: 600;
 }
 
@@ -84,7 +81,7 @@ input {
     background: #111;
     border: 1px solid var(--borda);
     border-radius: 8px;
-    color: white;
+    color: #ffb6d9;
 
     transition: 0.25s;
 }
@@ -105,7 +102,7 @@ textarea {
     border-radius: 10px;
 
     background: #0a0a0a;
-    color: #f1f1f1;
+    color: #ffb6d9;
 
     border: 1px solid var(--borda);
 
@@ -136,7 +133,6 @@ textarea:focus {
     min-height: 400px;
     background: #050505;
     border: 1px dashed var(--rosa);
-    color: #ffb6d9;
 }
 
 /* BOTÕES */
@@ -186,28 +182,6 @@ textarea::-webkit-scrollbar {
 textarea::-webkit-scrollbar-thumb {
     background: var(--rosa);
     border-radius: 10px;
-}
-
-/* PADRONIZA TUDO IGUAL AO CÓDIGO */
-body {
-    font-family: "Courier New", monospace;
-    color: #ffb6d9;
-}
-
-/* TÍTULOS */
-h1 {
-    color: #ffb6d9;
-}
-
-/* LABEL */
-label {
-    color: #ffb6d9;
-}
-
-/* INPUTS */
-input, textarea {
-    font-family: "Courier New", monospace;
-    color: #ffb6d9;
 }
 
 /* PLACEHOLDER */
