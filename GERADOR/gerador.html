@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,20 +7,32 @@
     <link rel="stylesheet" href="gerador.css">
 </head>
 <body>
-    <label for="inputNomeClasse">Nome da Classe</label>
-    <input type="text" id="inputNomeClasse">
-    <br>
-    <label for="inputAtributos">Atributos</label>
-    <input type="text" id="inputAtributos" style="width: 500px;">
-    <br>
-    <br>
-    <input type="button" value="Model" onclick="gerarModel()">
-    <input type="button" value="View" onclick="gerarView()">
-    <input type="button" value="Controller" onclick="gerarController()">
-    <br>
-    <br>
-    <textarea name="taCodigoFonte" id="taCodigoFonte" cols="200" rows="40"></textarea> 
+
+    <div class="container">
+
+        <h1>Gerador de Código</h1>
+
+        <!-- NOME DA CLASSE -->
+        <label for="inputNomeClasse">Nome da Classe</label>
+        <input type="text" id="inputNomeClasse" placeholder="Ex: Usuario">
+
+        <!-- ATRIBUTOS -->
+        <label for="inputAtributos">Atributos</label>
+        <textarea id="inputAtributos" placeholder="Ex: nome:string, idade:number"></textarea>
+
+        <!-- BOTÕES -->
+        <div class="botoes">
+            <button onclick="gerarModel()">Model</button>
+            <button onclick="gerarView()">View</button>
+            <button onclick="gerarController()">Controller</button>
+        </div>
+
+        <!-- SAÍDA -->
+        <label for="saida">Código Gerado</label>
+        <textarea id="saida"></textarea>
+
+    </div>
 
     <script src="gerador.js"></script>
 </body>
-
+</html>
