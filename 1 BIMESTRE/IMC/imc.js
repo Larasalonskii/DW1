@@ -4,9 +4,20 @@ function funcaoCalcular(){
     let peso = document.getElementById("inputpeso").value;
     let altura = document.getElementById("inputaltura").value;
     let imc = peso/(altura**2);
+    let aviso = document.getElementById("aviso");
+
+    
+    
+    if (isNaN(peso) || isNaN(altura)|| peso <=0 || altura <=0){
+        aviso.innerHTML = "Preencha os campos corretamete!";
+        aviso.style.display = "block";
+        return;
+    } 
+
+    aviso.style.display = "none";
 
     document.getElementById("respimc").innerHTML = imc.toFixed(2);
-
+    
     if(imc<18.5){
         classi = "Abaixo do Peso"
     }else if( imc >= 18.5 && imc < 25){
