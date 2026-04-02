@@ -1,0 +1,130 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+body {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0b0b0b, #111);
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* 👇 RESPIRO EM CIMA E EMBAIXO */
+    padding: 40px 20px;
+
+    color: #e4e4e7;
+}
+
+/* CONTAINER */
+.container {
+    width: 800px;
+    background: #111;
+    padding: 50px 40px;
+    border-radius: 20px;
+
+    /* 👇 sombra mais elegante */
+    box-shadow: 0 25px 70px rgba(0,0,0,0.8);
+
+    /* 👇 leve glow girl */
+    border: 1px solid rgba(244, 114, 182, 0.2);
+}
+
+/* TÍTULO */
+h1 {
+    text-align: center;
+    margin-bottom: 35px;
+    font-size: 28px;
+
+    /* 👇 rosa mais suave e moderno */
+    color: #f9a8d4;
+}
+
+/* GRID */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+}
+
+/* CAMPOS */
+.campo label {
+    font-size: 13px;
+    color: #a1a1aa;
+    margin-bottom: 6px;
+    display: block;
+}
+
+.campo input {
+    width: 100%;
+    padding: 13px;
+    border-radius: 10px;
+    border: 1px solid #2a2a2a;
+    background: #0f0f0f;
+    color: #fff;
+    transition: 0.25s;
+}
+
+/* 👇 efeito mais moderno */
+.campo input:focus {
+    border-color: #f472b6;
+    box-shadow: 0 0 10px rgba(244, 114, 182, 0.3);
+    transform: scale(1.02);
+}
+
+/* LINHA TODA */
+.full {
+    grid-column: span 2;
+}
+
+/* BOTÃO */
+button {
+    width: 100%;
+    margin-top: 30px;
+    padding: 15px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: linear-gradient(135deg, #f472b6, #ec4899);
+    color: white;
+
+    font-size: 15px;
+    font-weight: bold;
+
+    cursor: pointer;
+    transition: 0.25s;
+}
+
+/* 👇 hover mais sexy */
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(236, 72, 153, 0.4);
+}
+
+/* RESULTADO */
+#resp {
+    margin-top: 25px;
+    text-align: center;
+    font-size: 17px;
+    color: #f9a8d4;
+}
+
+.aprovado {
+    margin-top: 25px;
+    text-align: center;
+    color: #22c55e;
+    font-weight: bold;
+    font-size: 25px;
+}
+
+.reprovado {
+    margin-top: 25px;
+    text-align: center;
+    color: #ef4444;
+    font-weight: bold;
+    font-size: 25px;
+}
