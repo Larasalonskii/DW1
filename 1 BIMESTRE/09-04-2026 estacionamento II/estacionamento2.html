@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estacionamento</title>
+    <link rel="stylesheet" href="estacionamento.css">
+</head>
+<body>
+    <div class="form-wrapper">
+    <h1>Tarifação de Estacionamento</h1><br>
+    <label for="checkin">Checkin: </label>
+    <input type="datetime-local" id="inputin"><br><br>
+    <label for="checkout">Checkout</label>
+    <input type="datetime-local" id="inputout"><br><br>
+    <label for="tipov">O veículo é grande? </label>
+    <input type="checkbox" id="inputipo"><br><br>
+    <label for="clientef">O Cliente é Frequente? </label>
+    <input type="checkbox" id="inputcf"><br><br>
+    <input type="button" value="calcular" onclick="fcalcular()" ><br><br>
+    <h3>o preço da Tarifa do seu estacionamento é = </h3><br>
+    <label for="resp" id="resp">...</label>
+    </div>
+
+    <script src="estacionamento.js"></script>
+</body>
+</html> 
