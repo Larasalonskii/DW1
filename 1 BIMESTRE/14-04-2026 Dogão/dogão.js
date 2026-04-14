@@ -6,6 +6,9 @@ function fcalcular(){
     let refri1 = (parseInt(document.getElementById("inputr1").value) || 0) * 8;
 
     let resp = dogbasico + dogduplo + xsalada + refrip + refri1;
+    if (resp<0){
+        resp = 0 
+    }
 
     document.getElementById("total").innerHTML = "R$ " + resp.toFixed(2);
 }
