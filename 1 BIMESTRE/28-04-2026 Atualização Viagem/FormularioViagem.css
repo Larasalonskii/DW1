@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=Oswald:wght@500&display=swap');
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #e8e4dd;
+    font-family: 'Lora', serif;
+    padding: 2rem 1rem;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+article {
+    background: #fff;
+    width: 100%;
+    max-width: 640px;
+    padding: 3rem 3.5rem;
+    border: 1px solid #ccc;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12);
+}
+
+/* Header */
+header {
+    text-align: center;
+    border-bottom: 2px solid #1a1a2e;
+    padding-bottom: 1.25rem;
+    margin-bottom: 2rem;
+}
+
+header h1 {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.6rem;
+    letter-spacing: 0.1em;
+    color: #1a1a2e;
+    text-transform: uppercase;
+}
+
+header p {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 0.3rem;
+    font-style: italic;
+    text-align: center;
+}
+
+/* Conteúdo */
+#conteudo-documento p {
+    font-size: 1rem;
+    line-height: 1.85;
+    color: #222;
+    text-align: justify;
+    margin-bottom: 1.25rem;
+}
+
+.dado-preenchido {
+    font-weight: 600;
+    color: #1a1a2e;
+    text-transform: uppercase;
+}
+
+.aviso {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: #666;
+    border-left: 3px solid #ccc;
+    padding-left: 0.75rem;
+}
+
+/* Footer */
+footer {
+    margin-top: 3rem;
+    display: flex;
+    justify-content: space-around;
+    gap: 2rem;
+}
+
+.assinatura {
+    flex: 1;
+    text-align: center;
+}
+
+.linha-assinatura {
+    border-top: 1px solid #333;
+    margin-bottom: 0.5rem;
+}
+
+.assinatura p {
+    font-size: 0.82rem;
+    color: #333;
+    text-align: center;
+    line-height: 1.4;
+}
+
+.assinatura .cargo {
+    font-size: 0.72rem;
+    color: #888;
+    font-style: italic;
+}
+
+/* Data */
+.data-emissao {
+    text-align: center;
+    margin-top: 2rem;
+    font-size: 0.75rem;
+    color: #aaa;
+    font-style: italic;
+}
+
+/* Botão imprimir */
+.btn-imprimir {
+    margin-top: 1.5rem;
+    padding: 0.55rem 2rem;
+    background: #1a1a2e;
+    color: #fff;
+    border: none;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.btn-imprimir:hover {
+    background: #2e2e50;
+}
+
+@media print {
+    body {
+        background: white;
+        padding: 0;
+    }
+
+    .btn-imprimir {
+        display: none;
+    }
+
+    article {
+        box-shadow: none;
+        border: none;
+    }
+}
+
+@media (max-width: 500px) {
+    article {
+        padding: 2rem 1.5rem;
+    }
+
+    footer {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+}

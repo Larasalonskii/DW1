@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Autorização de Viagem Esportiva</title>
+    <link rel="stylesheet" href="FormularioViagem.css">
+</head>
+<body>
+
+    <article>
+        <header>
+            <h1>Autorização de Viagem</h1>
+            <p>Competição Esportiva Oficial</p>
+        </header>
+
+        <section id="conteudo-documento">
+            <p>
+                Pelo presente documento, Eu <span id="resnomer" class="dado-preenchido"></span>,
+                Responsável Legal do(a) aluno(a) <span id="resNome" class="dado-preenchido"></span>,
+                portador(a) do CPF <span id="resCpf" class="dado-preenchido"></span>,
+                autorizo a realização de viagem partindo de <span id="rescidadeo" class="dado-preenchido"></span>
+                com destino a <span id="rescidaded" class="dado-preenchido"></span>,
+                para participação em campeonato esportivo na modalidade
+                <span id="resmodalidade" class="dado-preenchido"></span>,
+                categoria <span id="rescategoria" class="dado-preenchido"></span>.
+            </p>
+
+            <p class="aviso">
+                Em caso de perda deste documento, o(a) atleta não será autorizado(a) a realizar a viagem.
+            </p>
+        </section>
+
+        <footer>
+            <div class="assinatura">
+                <div class="linha-assinatura"></div>
+                <p id="resnomer-footer"></p>
+                <p class="cargo">Responsável Legal</p>
+            </div>
+            <div class="assinatura">
+                <div class="linha-assinatura"></div>
+                <p>Juri da Lara</p>
+                <p class="cargo">Coordenador Esportivo</p>
+            </div>
+        </footer>
+
+        <p class="data-emissao" id="data-emissao"></p>
+    </article>
+
+    <button class="btn-imprimir" onclick="window.print()">Imprimir</button>
+
+    <script>
+        window.onload = function () {
+            const p = new URLSearchParams(window.location.search);
+
+            document.getElementById('resnomer').textContent       = p.get('nomer')      || '—';
+            document.getElementById('resnomer-footer').textContent = p.get('nomer')     || '—';
+            document.getElementById('resCpf').textContent         = p.get('cpf')        || '—';
+            document.getElementById('resNome').textContent        = p.get('nome')        || '—';
+            document.getElementById('rescidadeo').textContent     = p.get('cidadeo')    || '—';
+            document.getElementById('rescidaded').textContent     = p.get('cidaded')    || '—';
+            document.getElementById('resmodalidade').textContent  = p.get('modalidade') || '—';
+            document.getElementById('rescategoria').textContent   = p.get('categoria')  || '—';
+
+            const hoje = new Date();
+            document.getElementById('data-emissao').textContent =
+                'Emitido em ' + hoje.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+        };
+    </script>
+</body>
+</html>

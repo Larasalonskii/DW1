@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            overflow: hidden;
+            font-family: 'Georgia', serif;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        #overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            pointer-events: none;
+        }
+
+        #verse {
+            font-family: 'Georgia', serif;
+            font-style: italic;
+            color: rgba(255, 220, 120, 0);
+            font-size: 13px;
+            line-height: 1.8;
+            text-align: center;
+            padding: 0 20px 24px;
+            transition: color 1.2s ease;
+            text-shadow: 0 0 18px rgba(255, 200, 80, 0.6);
+            max-width: 620px;
+        }
+
+        #verse.visible {
+            color: rgba(255, 220, 120, 0.88);
+        }
+
+        #scene-label {
+            position: absolute;
+            top: 18px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 210, 100, 0.45);
+            font-size: 11px;
+            letter-spacing: 3px;
+            font-family: 'Georgia', serif;
+            font-style: italic;
+            transition: opacity 0.8s;
+        }
+
+        #label-night {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            color: rgba(180, 160, 255, 0.5);
+            font-size: 11px;
+            letter-spacing: 2px;
+            font-family: 'Georgia', serif;
+            writing-mode: vertical-rl;
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        #label-day {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            color: rgba(255, 220, 100, 0.5);
+            font-size: 11px;
+            letter-spacing: 2px;
+            font-family: 'Georgia', serif;
+            writing-mode: vertical-rl;
+            transform: translateY(-50%);
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="c"></canvas>
+    <div id="overlay">
+        <div id="verse"></div>
+    </div>
+    <div id="scene-label">I — A JORNADA</div>
+    <span id="label-night">NOITE</span>
+    <span id="label-day">DIA</span>
+
+    <script>
+        const canvas = document.getElementById('c');
+        const ctx = canvas.getContext('2d');
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        resize();
+        window.addEventListener('resize', resize);
+        const W = () => canvas.width;
+        const H = () => canvas.height;
+
+        let t = 0;
+        const SCENE_DUR = [380, 300, 340, 400, 999];
+        const SCENE_NAMES = ['I — A JORNADA', 'II — O EIXO QUE SILVA', 'III — O PORTAL', 'IV — A DEUSA FALA', 'V — OS DOIS CAMINHOS'];
+        let scene = 0, sceneT = 0;
+
+        const stars = Array.from({ length: 260 }, () => ({
+            x: Math.random(), y: Math.random(),
+            r: Math.random() * 1.4 + 0.3,
+            twinkle: Math.random() * Math.PI * 2,
+            speed: Math.random() * 0.03 + 0.01
+        }));
+
+        class Horse {
+            constructor(ox, oy, phase) { this.ox = ox; this.oy = oy; this.phase = phase; }
+            draw(cx, cy) {
+                const px = cx + this.ox, py = cy + this.oy;
+                const legCycle = Math.sin(t * 0.18 + this.phase);
+                ctx.save(); ctx.translate(px, py);
+                ctx.beginPath();
+                const bodyGrad = ctx.createLinearGradient(-28, -10, 28, 10);
+                bodyGrad.addColorStop(0, 'rgba(255,240,180,0.95)');
+                bodyGrad.addColorStop(1, 'rgba(220,180,80,0.85)');
+                ctx.fillStyle = bodyGrad;
+                ctx.ellipse(0, 0, 28, 12, 0.2, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(18, -6); ctx.bezierCurveTo(26, -14, 30, -20, 24, -26);
+                ctx.bezierCurveTo(20, -22, 18, -16, 12, -10); ctx.closePath();
+                ctx.fillStyle = 'rgba(255,240,180,0.95)'; ctx.fill();
+                ctx.beginPath(); ctx.ellipse(24, -29, 8, 5, -0.4, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255,240,180,0.9)'; ctx.fill();
+                ctx.beginPath(); ctx.moveTo(18, -20);
+                for (let i = 0; i < 5; i++) ctx.lineTo(20 + Math.sin(i + t * 0.1) * 3, -22 - i * 3);
+                ctx.strokeStyle = 'rgba(255,200,60,0.7)'; ctx.lineWidth = 2; ctx.stroke();
+                [[-14, 10, legCycle * 8], [-4, 12, -legCycle * 8], [8, 12, legCycle * 10], [18, 10, -legCycle * 10]].forEach(([lx, ly, swing]) => {
+                    ctx.beginPath(); ctx.moveTo(lx, ly);
+                    ctx.lineTo(lx + swing * 0.3, ly + 16 + Math.abs(swing) * 0.2);
+                    ctx.strokeStyle = 'rgba(200,160,60,0.9)'; ctx.lineWidth = 2.5; ctx.stroke();
+                });
+                ctx.beginPath(); ctx.moveTo(-26, 0);
+                ctx.bezierCurveTo(-38, 4 + legCycle * 4, -42, 8, -36, 14);
+                ctx.strokeStyle = 'rgba(255,210,80,0.7)'; ctx.lineWidth = 3; ctx.stroke();
+                const grd = ctx.createRadialGradient(0, 0, 0, 0, 0, 36);
+                grd.addColorStop(0, 'rgba(255,220,80,0.12)'); grd.addColorStop(1, 'rgba(255,220,80,0)');
+                ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(0, 0, 36, 0, Math.PI * 2); ctx.fill();
+                ctx.restore();
+            }
+        }
+        const horses = [new Horse(-46, 0, 0), new Horse(0, 0, Math.PI * 0.5), new Horse(46, 0, Math.PI)];
+
+        class Maiden {
+            constructor(x, phase) { this.xOff = x; this.phase = phase; }
+            draw(cx, cy) {
+                const px = cx + this.xOff, py = cy;
+                const sway = Math.sin(t * 0.08 + this.phase) * 3;
+                ctx.save(); ctx.translate(px + sway, py);
+                const rg = ctx.createLinearGradient(0, -40, 0, 40);
+                rg.addColorStop(0, 'rgba(255,240,180,0.9)'); rg.addColorStop(1, 'rgba(255,200,80,0.4)');
+                ctx.beginPath();
+                ctx.moveTo(-8, -40); ctx.bezierCurveTo(-10, -10, -14, 10, -18, 40);
+                ctx.lineTo(18, 40); ctx.bezierCurveTo(14, 10, 10, -10, 8, -40); ctx.closePath();
+                ctx.fillStyle = rg; ctx.fill();
+                const hg = ctx.createRadialGradient(0, -46, 0, 0, -46, 14);
+                hg.addColorStop(0, 'rgba(255,240,120,0.9)'); hg.addColorStop(0.5, 'rgba(255,200,60,0.5)');
+                hg.addColorStop(1, 'rgba(255,200,60,0)');
+                ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(0, -46, 14, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.arc(0, -46, 11, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(255,230,80,0.6)'; ctx.lineWidth = 1.5; ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(-6, 0); ctx.lineTo(-28, -10 + sway * 2);
+                ctx.moveTo(6, 0); ctx.lineTo(28, -8 + sway * 2);
+                ctx.strokeStyle = 'rgba(255,220,100,0.35)'; ctx.lineWidth = 2; ctx.stroke();
+                ctx.restore();
+            }
+        }
+        const maidens = [new Maiden(-80, 0), new Maiden(-26, 1.1), new Maiden(28, 2.2), new Maiden(82, 3.3)];
+
+        const particles = Array.from({ length: 90 }, () => ({
+            x: Math.random(), y: Math.random(),
+            vx: (Math.random() - 0.5) * 0.4, vy: -Math.random() * 0.5 - 0.1,
+            life: Math.random(), maxLife: Math.random() * 80 + 40,
+            r: Math.random() * 2 + 0.5, hue: Math.random() * 40 + 30
+        }));
+        function updateParticles() {
+            particles.forEach(p => {
+                p.x += p.vx / W(); p.y += p.vy / H(); p.life++;
+                if (p.life > p.maxLife || p.y < 0 || p.x < 0 || p.x > 1) {
+                    p.x = Math.random(); p.y = 1; p.life = 0; p.maxLife = Math.random() * 80 + 40;
+                }
+            });
+        }
+        function drawParticles(alpha = 1) {
+            particles.forEach(p => {
+                const a = (1 - p.life / p.maxLife) * alpha * 0.6;
+                ctx.beginPath(); ctx.arc(p.x * W(), p.y * H(), p.r, 0, Math.PI * 2);
+                ctx.fillStyle = `hsla(${p.hue + 200},80%,80%,${a})`; ctx.fill();
+            });
+        }
+
+        function drawPortal(cx, cy, openAmt, flash) {
+            ctx.save(); ctx.translate(cx, cy);
+            const w = 130, h = 200;
+            const stoneG = ctx.createLinearGradient(-w / 2 - 20, 0, w / 2 + 20, 0);
+            stoneG.addColorStop(0, 'rgba(80,70,60,0.9)');
+            stoneG.addColorStop(0.5, 'rgba(130,115,95,0.9)');
+            stoneG.addColorStop(1, 'rgba(80,70,60,0.9)');
+            ctx.fillStyle = stoneG;
+            ctx.fillRect(-w / 2 - 22, -h / 2, 22, h);
+            ctx.fillRect(w / 2, -h / 2, 22, h);
+            ctx.fillRect(-w / 2 - 22, -h / 2 - 28, w + 44, 28);
+            ctx.fillStyle = 'rgba(90,80,68,0.8)';
+            ctx.fillRect(-w / 2 - 22, h / 2 - 8, w + 44, 22);
+            ctx.strokeStyle = 'rgba(40,30,20,0.5)'; ctx.lineWidth = 1;
+            for (let i = 0; i < 4; i++) {
+                ctx.beginPath(); ctx.moveTo(-w / 2 - 22, -h / 2 + i * (h / 4)); ctx.lineTo(-w / 2, -h / 2 + i * (h / 4)); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(w / 2, -h / 2 + i * (h / 4)); ctx.lineTo(w / 2 + 22, -h / 2 + i * (h / 4)); ctx.stroke();
+            }
+            const angle = openAmt * 1.1;
+            ctx.save(); ctx.translate(-w / 2 + 2, 0);
+            ctx.transform(Math.cos(angle), 0, Math.sin(angle) * 0.4, 1, 0, 0);
+            const dg1 = ctx.createLinearGradient(0, -h / 2, w / 2, h / 2);
+            dg1.addColorStop(0, 'rgba(50,40,30,0.95)'); dg1.addColorStop(1, 'rgba(80,60,40,0.9)');
+            ctx.fillStyle = dg1; ctx.fillRect(0, -h / 2, w / 2 - 2, h);
+            ctx.beginPath(); ctx.arc(w / 2 - 10, 0, 5, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(160,120,40,0.9)'; ctx.fill(); ctx.restore();
+            ctx.save(); ctx.translate(w / 2 - 2, 0);
+            ctx.transform(Math.cos(angle), 0, -Math.sin(angle) * 0.4, 1, 0, 0);
+            const dg2 = ctx.createLinearGradient(-w / 2, 0, 0, h / 2);
+            dg2.addColorStop(0, 'rgba(80,60,40,0.9)'); dg2.addColorStop(1, 'rgba(50,40,30,0.95)');
+            ctx.fillStyle = dg2; ctx.fillRect(-w / 2 + 2, -h / 2, w / 2 - 2, h);
+            ctx.beginPath(); ctx.arc(-w / 2 + 10, 0, 5, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(160,120,40,0.9)'; ctx.fill(); ctx.restore();
+            if (openAmt > 0.01) {
+                const abyss = ctx.createLinearGradient(0, -h / 2, 0, h / 2);
+                abyss.addColorStop(0, 'rgba(255,220,120,' + openAmt * 0.9 + ')');
+                abyss.addColorStop(0.3, 'rgba(200,160,60,' + openAmt * 0.7 + ')');
+                abyss.addColorStop(1, 'rgba(0,0,0,0.95)');
+                ctx.fillStyle = abyss; ctx.fillRect(-w / 2 + 2, -h / 2, w - 4, h);
+                if (openAmt > 0.3) {
+                    for (let i = -3; i <= 3; i++) {
+                        const rx = (i / 3.5) * (w / 2 - 2);
+                        ctx.beginPath(); ctx.moveTo(rx, -h / 2); ctx.lineTo(rx + i * 30, -h / 2 - 120);
+                        ctx.strokeStyle = `rgba(255,220,100,${openAmt * 0.15})`;
+                        ctx.lineWidth = Math.abs(i) * 3 + 1; ctx.stroke();
+                    }
+                }
+            }
+            [[-w / 2 - 2, -h / 4], [-w / 2 - 2, h / 4], [w / 2, -h / 4], [w / 2, h / 4]].forEach(([bx, by]) => {
+                const hg = ctx.createRadialGradient(bx, by, 0, bx, by, 8);
+                hg.addColorStop(0, 'rgba(220,160,40,1)'); hg.addColorStop(1, 'rgba(140,90,20,0.6)');
+                ctx.fillStyle = hg; ctx.beginPath(); ctx.ellipse(bx, by, 8, 6, 0, 0, Math.PI * 2); ctx.fill();
+            });
+            // Δίκη key glyph — only when door is closed
+            if (openAmt < 0.15) {
+                ctx.beginPath();
+                ctx.moveTo(-8, h / 2 + 8); ctx.lineTo(-8, h / 2 + 24);
+                ctx.moveTo(8, h / 2 + 8); ctx.lineTo(8, h / 2 + 24);
+                ctx.moveTo(-14, h / 2 + 16); ctx.lineTo(14, h / 2 + 16);
+                ctx.strokeStyle = 'rgba(220,180,80,0.7)'; ctx.lineWidth = 2; ctx.stroke();
+                ctx.font = '10px Georgia'; ctx.fillStyle = 'rgba(220,180,80,0.6)'; ctx.textAlign = 'center';
+                ctx.fillText('Δίκη', 0, h / 2 + 38);
+            }
+            if (flash > 0) {
+                const fg = ctx.createRadialGradient(0, 0, 0, 0, 0, w / 2);
+                fg.addColorStop(0, `rgba(255,240,180,${flash * 0.8})`);
+                fg.addColorStop(1, `rgba(255,220,80,0)`);
+                ctx.fillStyle = fg; ctx.fillRect(-w / 2, -h / 2, w, h);
+            }
+            ctx.restore();
+        }
+
+        function drawWheel(x, y, angle) {
+            ctx.save(); ctx.translate(x, y); ctx.rotate(angle);
+            ctx.beginPath(); ctx.arc(0, 0, 22, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(200,160,60,0.9)'; ctx.lineWidth = 3; ctx.stroke();
+            ctx.beginPath(); ctx.arc(0, 0, 5, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(220,180,80,1)'; ctx.fill();
+            for (let i = 0; i < 8; i++) {
+                const a = i * Math.PI / 4;
+                ctx.beginPath();
+                ctx.moveTo(Math.cos(a) * 5, Math.sin(a) * 5); ctx.lineTo(Math.cos(a) * 21, Math.sin(a) * 21);
+                ctx.strokeStyle = 'rgba(200,160,60,0.7)'; ctx.lineWidth = 1.5; ctx.stroke();
+            }
+            const ag = ctx.createRadialGradient(0, 0, 0, 0, 0, 8);
+            ag.addColorStop(0, 'rgba(255,160,60,0.6)'); ag.addColorStop(1, 'rgba(255,160,60,0)');
+            ctx.fillStyle = ag; ctx.beginPath(); ctx.arc(0, 0, 8, 0, Math.PI * 2); ctx.fill();
+            ctx.restore();
+        }
+
+        function drawSky(dayAmt) {
+            const w = W(), h = H();
+            const sky = ctx.createLinearGradient(0, 0, w, h);
+            sky.addColorStop(0, `rgb(${lerp(8, 10, dayAmt)},${lerp(4, 20, dayAmt)},${lerp(28, 60, dayAmt)})`);
+            sky.addColorStop(0.4, `rgb(${lerp(16, 30, dayAmt)},${lerp(8, 50, dayAmt)},${lerp(50, 100, dayAmt)})`);
+            sky.addColorStop(1, `rgb(${lerp(40, 255, dayAmt)},${lerp(20, 200, dayAmt)},${lerp(60, 80, dayAmt)})`);
+            ctx.fillStyle = sky; ctx.fillRect(0, 0, w, h);
+            if (dayAmt > 0.2) {
+                const hg = ctx.createRadialGradient(w * 0.75, h * 0.5, 0, w * 0.75, h * 0.5, h * 0.6);
+                hg.addColorStop(0, `rgba(255,180,60,${dayAmt * 0.5})`);
+                hg.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = hg; ctx.fillRect(0, 0, w, h);
+            }
+        }
+        function lerp(a, b, t) { return a + (b - a) * Math.max(0, Math.min(1, t)); }
+
+        function drawStars(alpha) {
+            stars.forEach(s => {
+                s.twinkle += s.speed;
+                const a = (0.5 + 0.5 * Math.sin(s.twinkle)) * alpha;
+                ctx.beginPath(); ctx.arc(s.x * W(), s.y * H(), s.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(220,210,255,${a})`; ctx.fill();
+            });
+        }
+
+        function drawPath(cx, cy) {
+            const h = H();
+            ctx.save();
+            const pg = ctx.createLinearGradient(0, cy - 20, 0, h);
+            pg.addColorStop(0, 'rgba(255,210,60,0.7)'); pg.addColorStop(0.5, 'rgba(200,160,40,0.4)');
+            pg.addColorStop(1, 'rgba(100,80,20,0.1)');
+            ctx.beginPath();
+            ctx.moveTo(cx - 200, h); ctx.lineTo(cx - 6, cy - 30);
+            ctx.lineTo(cx + 6, cy - 30); ctx.lineTo(cx + 200, h); ctx.closePath();
+            ctx.fillStyle = pg; ctx.fill();
+            ctx.strokeStyle = 'rgba(255,230,100,0.4)'; ctx.lineWidth = 1.5; ctx.setLineDash([8, 12]);
+            ctx.beginPath(); ctx.moveTo(cx, h); ctx.lineTo(cx, cy - 30);
+            ctx.stroke(); ctx.setLineDash([]); ctx.restore();
+        }
+
+        function cubicBez(p0, p1, p2, p3, t) {
+            const mt = 1 - t;
+            return mt * mt * mt * p0 + 3 * mt * mt * t * p1 + 3 * mt * t * t * p2 + t * t * t * p3;
+        }
+
+        // Draws a text label with a semi-transparent backing box for readability
+        function drawLabel(text, x, y, color, alpha, fontSize, bgAlpha) {
+            ctx.save();
+            ctx.font = `italic ${fontSize}px Georgia`;
+            ctx.globalAlpha = alpha;
+            const metrics = ctx.measureText(text);
+            const pad = 6;
+            const bh = fontSize + pad * 2;
+            const bw = metrics.width + pad * 2;
+            ctx.fillStyle = `rgba(0,0,0,${bgAlpha || 0.45})`;
+            ctx.beginPath();
+            ctx.roundRect(x - bw / 2, y - bh + pad, bw, bh, 4);
+            ctx.fill();
+            ctx.fillStyle = color;
+            ctx.textAlign = 'center';
+            ctx.fillText(text, x, y);
+            ctx.restore();
+        }
+
+        function drawTwoPaths(cx, cy, revealT, canvasW) {
+            ctx.save();
+
+            // --- PATH OF BEING (left side) ---
+            const ba = revealT;
+            ctx.globalAlpha = ba;
+
+            // Draw path line
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.bezierCurveTo(cx - 80, cy - 60, cx - 160, cy - 100, cx - 240, cy - 120);
+            const bp = ctx.createLinearGradient(cx, cy, cx - 240, cy - 120);
+            bp.addColorStop(0, 'rgba(255,220,80,0.9)'); bp.addColorStop(1, 'rgba(255,240,160,0.3)');
+            ctx.strokeStyle = bp; ctx.lineWidth = 5; ctx.stroke();
+
+            // Dots along the path
+            for (let i = 0; i < 12; i++) {
+                const s = i / 11;
+                const bx = lerp(cx, cx - 240, s);
+                const by = cubicBez(cy, cy - 60, cy - 100, cy - 120, s);
+                ctx.beginPath(); ctx.arc(bx, by, 2 + s * 2, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(255,240,120,${ba * (0.4 + s * 0.5)})`; ctx.fill();
+            }
+
+            // Label box for Being — placed at end of path, left side
+            const beingX = cx - 240;
+            const beingY = cy - 130;
+
+            // Greek label
+            ctx.globalAlpha = ba;
+            ctx.font = 'italic 15px Georgia';
+            ctx.fillStyle = 'rgba(255,230,100,1)';
+            ctx.textAlign = 'center';
+            const glabelW1 = ctx.measureText('ἔστιν').width + 20;
+            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.beginPath(); ctx.roundRect(beingX - glabelW1 / 2, beingY - 20, glabelW1, 24, 3); ctx.fill();
+            ctx.fillStyle = 'rgba(255,230,100,1)';
+            ctx.fillText('ἔστιν', beingX, beingY - 2);
+
+            // Portuguese sub-label
+            ctx.font = '12px Georgia';
+            const ptlabel1 = 'É — não pode não ser';
+            const plabelW1 = ctx.measureText(ptlabel1).width + 16;
+            ctx.fillStyle = 'rgba(0,0,0,0.45)';
+            ctx.beginPath(); ctx.roundRect(beingX - plabelW1 / 2, beingY + 8, plabelW1, 20, 3); ctx.fill();
+            ctx.fillStyle = 'rgba(255,220,80,0.9)';
+            ctx.fillText(ptlabel1, beingX, beingY + 22);
+
+            // Description
+            ctx.font = '11px Georgia';
+            const desc1 = 'caminho de confiança · acompanha a verdade';
+            const dlabelW1 = ctx.measureText(desc1).width + 16;
+            ctx.fillStyle = 'rgba(0,0,0,0.4)';
+            ctx.beginPath(); ctx.roundRect(beingX - dlabelW1 / 2, beingY + 32, dlabelW1, 18, 3); ctx.fill();
+            ctx.fillStyle = 'rgba(255,210,70,0.7)';
+            ctx.fillText(desc1, beingX, beingY + 46);
+
+            // --- PATH OF NON-BEING (right side) ---
+            ctx.globalAlpha = ba * 0.65;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.bezierCurveTo(cx + 80, cy - 50, cx + 160, cy - 60, cx + 220, cy - 40);
+            ctx.setLineDash([6, 8]);
+            const np = ctx.createLinearGradient(cx, cy, cx + 220, cy - 40);
+            np.addColorStop(0, 'rgba(160,130,220,0.7)'); np.addColorStop(1, 'rgba(80,50,160,0.1)');
+            ctx.strokeStyle = np; ctx.lineWidth = 3; ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Void symbol at path end
+            ctx.globalAlpha = ba * 0.5;
+            ctx.font = 'bold 30px Georgia';
+            ctx.fillStyle = 'rgba(120,90,200,0.6)';
+            ctx.textAlign = 'center';
+            ctx.fillText('∅', cx + 230, cy - 50);
+
+            // Non-being labels — right side, with backing boxes
+            const nbX = cx + 220;
+            const nbY = cy - 70;
+
+            ctx.globalAlpha = ba * 0.85;
+            ctx.font = 'italic 15px Georgia';
+            const glabelW2 = ctx.measureText('οὐκ ἔστιν').width + 20;
+            ctx.fillStyle = 'rgba(0,0,0,0.5)';
+            ctx.beginPath(); ctx.roundRect(nbX - glabelW2 / 2, nbY - 20, glabelW2, 24, 3); ctx.fill();
+            ctx.fillStyle = 'rgba(180,155,230,0.95)';
+            ctx.fillText('οὐκ ἔστιν', nbX, nbY - 2);
+
+            ctx.font = '12px Georgia';
+            const ptlabel2 = 'Não é — tem de não ser';
+            const plabelW2 = ctx.measureText(ptlabel2).width + 16;
+            ctx.fillStyle = 'rgba(0,0,0,0.45)';
+            ctx.beginPath(); ctx.roundRect(nbX - plabelW2 / 2, nbY + 8, plabelW2, 20, 3); ctx.fill();
+            ctx.fillStyle = 'rgba(160,135,220,0.85)';
+            ctx.fillText(ptlabel2, nbX, nbY + 22);
+
+            ctx.font = '11px Georgia';
+            const desc2 = 'caminho ignoto · não se pode conhecer';
+            const dlabelW2 = ctx.measureText(desc2).width + 16;
+            ctx.fillStyle = 'rgba(0,0,0,0.4)';
+            ctx.beginPath(); ctx.roundRect(nbX - dlabelW2 / 2, nbY + 32, dlabelW2, 18, 3); ctx.fill();
+            ctx.fillStyle = 'rgba(140,115,200,0.65)';
+            ctx.fillText(desc2, nbX, nbY + 46);
+
+            ctx.globalAlpha = 1;
+            ctx.restore();
+        }
+
+        function drawGoddess(x, y, alpha) {
+            ctx.save(); ctx.translate(x, y); ctx.globalAlpha = alpha;
+            const ag = ctx.createRadialGradient(0, -60, 10, 0, -20, 140);
+            ag.addColorStop(0, 'rgba(255,230,120,0.35)'); ag.addColorStop(0.5, 'rgba(200,160,60,0.1)');
+            ag.addColorStop(1, 'rgba(255,200,60,0)');
+            ctx.fillStyle = ag; ctx.beginPath(); ctx.arc(0, -20, 140, 0, Math.PI * 2); ctx.fill();
+            const rg = ctx.createLinearGradient(0, -100, 0, 90);
+            rg.addColorStop(0, 'rgba(255,250,220,0.95)'); rg.addColorStop(0.5, 'rgba(240,210,120,0.85)');
+            rg.addColorStop(1, 'rgba(180,140,60,0.5)');
+            ctx.beginPath();
+            ctx.moveTo(-22, -100); ctx.bezierCurveTo(-28, -40, -32, 20, -36, 90);
+            ctx.lineTo(36, 90); ctx.bezierCurveTo(32, 20, 28, -40, 22, -100); ctx.closePath();
+            ctx.fillStyle = rg; ctx.fill();
+            ctx.beginPath(); ctx.moveTo(-8, -100); ctx.bezierCurveTo(-20, -60, -26, 0, -30, 90);
+            ctx.strokeStyle = 'rgba(200,160,60,0.3)'; ctx.lineWidth = 1; ctx.stroke();
+            const hg = ctx.createRadialGradient(0, -118, 4, 0, -115, 28);
+            hg.addColorStop(0, 'rgba(255,250,200,1)'); hg.addColorStop(0.4, 'rgba(255,220,80,0.8)');
+            hg.addColorStop(1, 'rgba(255,180,40,0)');
+            ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(0, -115, 28, 0, Math.PI * 2); ctx.fill();
+            ctx.beginPath(); ctx.arc(0, -115, 14, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255,250,220,0.95)'; ctx.fill();
+            for (let i = 0; i < 8; i++) {
+                const a = i * Math.PI / 4 - Math.PI / 2;
+                ctx.beginPath();
+                ctx.moveTo(Math.cos(a) * 13, -115 + Math.sin(a) * 13); ctx.lineTo(Math.cos(a) * 26, -115 + Math.sin(a) * 26);
+                ctx.strokeStyle = 'rgba(255,220,80,0.5)'; ctx.lineWidth = 1.5; ctx.stroke();
+            }
+            ctx.beginPath(); ctx.moveTo(22, -50); ctx.bezierCurveTo(36, -40, 50, -30, 62, -24);
+            ctx.strokeStyle = 'rgba(255,240,180,0.8)'; ctx.lineWidth = 3; ctx.stroke();
+            ctx.beginPath(); ctx.arc(62, -24, 5, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(255,230,160,0.9)'; ctx.fill();
+            ctx.restore();
+        }
+
+        const verses = [
+            { scene: 0, frame: 60, text: 'Os corcéis que me transportam, tanto quanto o ânimo me impele,\nconduzem-me pelo caminho famoso da divindade...' },
+            { scene: 1, frame: 20, text: 'O eixo silvava nos cubos como uma siringe, incandescendo,\nao ser movido pelas duas rodas vertiginosas...' },
+            { scene: 2, frame: 30, text: 'Aí está o portal que separa os caminhos da Noite e do Dia,\nencimado por um dintel e um ombral de pedra...' },
+            { scene: 3, frame: 20, text: '"Ò jovem... Salvè! Não foi um mau destino que te induziu a viajar\npor este caminho — tão fora do trilho dos homens..."' },
+            { scene: 4, frame: 40, text: '...um que é, que não é para não ser — caminho de confiança.\nO outro que não é — esse é caminho em tudo ignoto.' }
+        ];
+        let lastVerse = -1;
+
+        function updateVerse() {
+            verses.forEach((v, i) => {
+                if (scene === v.scene && sceneT >= v.frame && lastVerse < i) {
+                    lastVerse = i;
+                    const el = document.getElementById('verse');
+                    el.classList.remove('visible');
+                    el.textContent = v.text;
+                    setTimeout(() => el.classList.add('visible'), 50);
+                }
+            });
+        }
+
+        function getSceneAlpha(duration) {
+            const fadeIn = 30, fadeOut = 30;
+            if (sceneT < fadeIn) return sceneT / fadeIn;
+            if (sceneT > duration - fadeOut) return (duration - sceneT) / fadeOut;
+            return 1;
+        }
+
+        function draw() {
+            const w = W(), h = H();
+            ctx.clearRect(0, 0, w, h);
+            const cx = w * 0.5, cy = h * 0.48;
+
+            const dayAmt =
+                scene === 0 ? sceneT / SCENE_DUR[0] * 0.3 :
+                    scene === 1 ? 0.3 + sceneT / SCENE_DUR[1] * 0.2 :
+                        scene === 2 ? 0.5 + sceneT / SCENE_DUR[2] * 0.3 :
+                            scene === 3 ? 0.8 + sceneT / SCENE_DUR[3] * 0.15 : 0.95;
+
+            drawSky(dayAmt);
+            drawStars(Math.max(0, 1 - dayAmt * 2));
+            updateParticles();
+            drawParticles(Math.max(0, 1 - dayAmt * 1.5));
+
+            // ===== SCENE 0: A Jornada =====
+            if (scene === 0) {
+                const a = getSceneAlpha(SCENE_DUR[0]);
+                ctx.globalAlpha = a;
+                drawPath(cx, cy - 60);
+                const moveX = cx - 120 + (sceneT / SCENE_DUR[0]) * 60;
+                const moveY = cy + 20;
+                ctx.save(); ctx.translate(moveX, moveY);
+                const chg = ctx.createLinearGradient(-30, -15, 30, 15);
+                chg.addColorStop(0, 'rgba(200,160,50,0.95)'); chg.addColorStop(1, 'rgba(140,100,20,0.9)');
+                ctx.fillStyle = chg;
+                ctx.beginPath();
+                ctx.moveTo(-30, 0); ctx.lineTo(-30, -25); ctx.lineTo(30, -25); ctx.lineTo(30, 0);
+                ctx.bezierCurveTo(20, 8, -20, 8, -30, 0); ctx.closePath(); ctx.fill();
+                ctx.strokeStyle = 'rgba(220,180,60,0.5)'; ctx.lineWidth = 1; ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(-40, 8); ctx.lineTo(40, 8);
+                ctx.strokeStyle = 'rgba(180,140,40,0.8)'; ctx.lineWidth = 3; ctx.stroke();
+                ctx.restore();
+                const wangle = t * 0.15;
+                drawWheel(moveX - 34, moveY + 8, wangle);
+                drawWheel(moveX + 34, moveY + 8, wangle);
+                horses.forEach(hr => hr.draw(moveX + 80, moveY - 14));
+                maidens.forEach(m => m.draw(moveX + m.xOff * 0.5 + 30, moveY + 10));
+                if (sceneT > 80) {
+                    const la = Math.min(1, (sceneT - 80) / 40) * 0.7;
+                    drawLabel('ὁδός — o caminho famoso da divindade', cx, cy + h * 0.18, 'rgba(255,220,80,1)', la, 11, 0.5);
+                }
+                ctx.globalAlpha = 1;
+            }
+
+            // ===== SCENE 1: O Eixo que Silva =====
+            else if (scene === 1) {
+                const a = getSceneAlpha(SCENE_DUR[1]);
+                ctx.globalAlpha = a;
+                drawPath(cx, cy - 40);
+                const wangle = t * 0.6;
+                drawWheel(cx, cy + 30, wangle);
+                for (let i = 1; i <= 6; i++) {
+                    const r = 30 + i * 22 + Math.sin(t * 0.2) * 5;
+                    const wa = Math.max(0, 1 - i * 0.16) * 0.4 * a;
+                    ctx.beginPath(); ctx.arc(cx, cy + 30, r, 0, Math.PI * 2);
+                    ctx.strokeStyle = `rgba(255,200,80,${wa})`; ctx.lineWidth = 1; ctx.stroke();
+                }
+                const hg = ctx.createRadialGradient(cx, cy + 30, 0, cx, cy + 30, 18);
+                hg.addColorStop(0, 'rgba(255,200,60,0.9)'); hg.addColorStop(0.5, 'rgba(255,120,20,0.4)');
+                hg.addColorStop(1, 'rgba(255,60,0,0)');
+                ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(cx, cy + 30, 18, 0, Math.PI * 2); ctx.fill();
+                maidens.forEach(m => m.draw(cx + m.xOff * 0.7, cy - 20));
+                horses.forEach(hr => hr.draw(cx + 70 + hr.ox * 0.4, cy - 30));
+                // Label for siringe
+                if (sceneT > 40) {
+                    const la = Math.min(1, (sceneT - 40) / 40) * a;
+                    drawLabel('siringe — o eixo incandescente', cx, cy + 80, 'rgba(255,200,80,1)', la, 12, 0.5);
+                }
+                ctx.globalAlpha = 1;
+            }
+
+            // ===== SCENE 2: O Portal =====
+            else if (scene === 2) {
+                const a = getSceneAlpha(SCENE_DUR[2]);
+                const openProg = Math.max(0, (sceneT - 80) / 200);
+                const openAmt = Math.min(1, openProg) * 1.2;
+                const flash = Math.max(0, 1 - openProg * 3) * a;
+                ctx.globalAlpha = a;
+                maidens.forEach(m => {
+                    m.draw(cx + (m.xOff > 0 ? m.xOff * 0.6 + 10 : m.xOff * 0.6 - 10), cy + 70);
+                });
+                drawPortal(cx, cy - 20, Math.min(1.2, openAmt), flash);
+                if (openAmt > 0.1) {
+                    const lg = ctx.createRadialGradient(cx, cy - 20, 0, cx, cy - 20, 200);
+                    lg.addColorStop(0, `rgba(255,220,100,${Math.min(openAmt, 1) * 0.25})`);
+                    lg.addColorStop(1, 'rgba(255,220,100,0)');
+                    ctx.fillStyle = lg; ctx.fillRect(0, 0, w, h);
+                }
+                // Label: abismo hiante
+                if (openAmt > 0.4) {
+                    const la = Math.min(1, (openAmt - 0.4) / 0.3) * a;
+                    drawLabel('abismo hiante — luz do Dia', cx, cy + 120, 'rgba(255,220,80,1)', la, 12, 0.5);
+                }
+                ctx.globalAlpha = 1;
+            }
+
+            // ===== SCENE 3: A Deusa Fala =====
+            else if (scene === 3) {
+                const a = getSceneAlpha(SCENE_DUR[3]);
+                const godA = Math.min(1, sceneT / 80) * a;
+                ctx.globalAlpha = a;
+                const bgG = ctx.createLinearGradient(0, 0, 0, h);
+                bgG.addColorStop(0, 'rgba(255,220,80,0.08)'); bgG.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = bgG; ctx.fillRect(0, 0, w, h);
+                drawGoddess(cx, cy - 60, godA);
+                ctx.save(); ctx.translate(cx + 90, cy + 10); ctx.globalAlpha = godA;
+                const yg = ctx.createLinearGradient(0, -60, 0, 60);
+                yg.addColorStop(0, 'rgba(200,220,255,0.9)'); yg.addColorStop(1, 'rgba(120,140,200,0.4)');
+                ctx.beginPath();
+                ctx.moveTo(-12, -60); ctx.bezierCurveTo(-14, -20, -16, 10, -18, 60);
+                ctx.lineTo(18, 60); ctx.bezierCurveTo(16, 10, 14, -20, 12, -60);
+                ctx.closePath(); ctx.fillStyle = yg; ctx.fill();
+                const hhg = ctx.createRadialGradient(0, -72, 3, 0, -70, 14);
+                hhg.addColorStop(0, 'rgba(220,220,255,0.9)'); hhg.addColorStop(1, 'rgba(180,180,240,0)');
+                ctx.fillStyle = hhg; ctx.beginPath(); ctx.arc(0, -70, 12, 0, Math.PI * 2); ctx.fill();
+                ctx.beginPath(); ctx.moveTo(-12, -20); ctx.lineTo(-42, -28);
+                ctx.strokeStyle = 'rgba(200,220,255,0.7)'; ctx.lineWidth = 2.5; ctx.stroke();
+                ctx.restore();
+                ctx.globalAlpha = 1;
+            }
+
+            // ===== SCENE 4: Os Dois Caminhos =====
+            else if (scene === 4) {
+                const a = Math.min(1, sceneT / 60);
+                ctx.globalAlpha = a;
+                const og = ctx.createRadialGradient(cx, cy + 40, 0, cx, cy + 40, 80);
+                og.addColorStop(0, 'rgba(255,230,100,0.4)'); og.addColorStop(1, 'rgba(255,200,60,0)');
+                ctx.fillStyle = og; ctx.beginPath(); ctx.arc(cx, cy + 40, 80, 0, Math.PI * 2); ctx.fill();
+                // Origin point
+                ctx.beginPath(); ctx.arc(cx, cy + 30, 6, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255,240,150,0.95)'; ctx.fill();
+                ctx.beginPath(); ctx.arc(cx, cy + 30, 12, 0, Math.PI * 2);
+                ctx.strokeStyle = 'rgba(255,220,80,0.4)'; ctx.lineWidth = 2; ctx.stroke();
+                // Paths
+                const rev = Math.min(1, (sceneT - 30) / 100);
+                drawTwoPaths(cx, cy + 30, rev, w);
+                // Aletheia label — top center, clear of path labels
+                if (sceneT > 120) {
+                    const ta = Math.min(1, (sceneT - 120) / 60) * a;
+                    ctx.globalAlpha = ta;
+                    // backing box
+                    ctx.font = 'italic 14px Georgia';
+                    const glk = 'ἀλήθεια — realidade fidedigna';
+                    const glkW = ctx.measureText(glk).width + 20;
+                    ctx.fillStyle = 'rgba(0,0,0,0.5)';
+                    ctx.beginPath(); ctx.roundRect(cx - glkW / 2, cy - 155, glkW, 22, 3); ctx.fill();
+                    ctx.fillStyle = 'rgba(255,230,100,0.95)';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(glk, cx, cy - 139);
+                    ctx.font = '11px Georgia';
+                    const sub = 'o coração inabalável da verdade';
+                    const subW = ctx.measureText(sub).width + 16;
+                    ctx.fillStyle = 'rgba(0,0,0,0.45)';
+                    ctx.beginPath(); ctx.roundRect(cx - subW / 2, cy - 133, subW, 19, 3); ctx.fill();
+                    ctx.fillStyle = 'rgba(255,200,80,0.75)';
+                    ctx.fillText(sub, cx, cy - 120);
+                }
+                ctx.globalAlpha = 1;
+            }
+
+            updateVerse();
+            t++; sceneT++;
+
+            // Update scene label
+            const SCENES = ['journey', 'portal', 'gateway', 'revelation', 'paths'];
+            if (scene < SCENES.length - 1 && sceneT >= SCENE_DUR[scene]) {
+                scene++; sceneT = 0;
+                document.getElementById('scene-label').textContent = SCENE_NAMES[scene];
+            }
+            if (scene === SCENES.length - 1 && sceneT >= 600) sceneT = 300;
+
+            requestAnimationFrame(draw);
+        }
+        draw();
+    </script>
+</body>
+
+</html>
