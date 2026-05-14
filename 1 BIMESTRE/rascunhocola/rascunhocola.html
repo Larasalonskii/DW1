@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro</title>
+
+    <style>
+        :root {
+            --azul: blue;
+        }
+
+        body {
+            font-family: Arial;
+            text-align: center;
+        }
+
+        .box {
+            width: 300px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        button {
+            background-color: var(--azul);
+            color: white;
+            padding: 5px;
+        }
+
+        table {
+            width: 100%;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1 id="titulo">Cadastro</h1>
+    </header>
+
+    <main>
+        <section class="box">
+
+            <!-- IMAGEM -->
+            <img src="./img/foto.jpg" alt="imagem exemplo" width="100%">
+
+            <!-- FORM -->
+            <form onsubmit="return cadastrar()">
+
+                <input type="text" id="nome" placeholder="Nome"><br><br>
+
+                <input type="number" id="idade" placeholder="Idade"><br><br>
+
+                <select id="categoria">
+                    <option value="">Escolha</option>
+                    <option>Estudante</option>
+                    <option>Profissional</option>
+                </select><br><br>
+
+                <button type="submit">Enviar</button>
+
+            </form>
+
+            <!-- TABELA -->
+            <table border="1">
+                <tr>
+                    <th>Nome</th>
+                    <th>Idade</th>
+                </tr>
+                <tbody id="tabela"></tbody>
+            </table>
+
+        </section>
+    </main>
+
+    <footer>
+        Rodapé
+    </footer>
+
+    <script>
+        function cadastrar() {
+            let nome = document.getElementById("nome").value;
+            let idade = document.getElementById("idade").value;
+
+            // validação simples
+            if (nome === "" || idade === "") {
+                alert("Preencha tudo!");
+                return false;
+            }
+
+            // adicionar na tabela
+            let tabela = document.getElementById("tabela");
+
+            let linha = tabela.insertRow();
+
+            linha.insertCell(0).innerText = nome;
+            linha.insertCell(1).innerText = idade;
+
+            return false;
+        }
+    </script>
+
+</body>
+
+</html>
