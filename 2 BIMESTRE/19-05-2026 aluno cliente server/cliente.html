@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Enviar mensagens</title>
+</head>
+
+<body>
+    <h1>Envie uma mensagem para o servidor</h1>
+    <label for="enderecoServidorInput">Endereço do Servidor:</label>
+    <input type="text" id="enderecoServidorInput" placeholder="Digite o endereço do servidor" value="localhost"><br><br>
+
+    <label for="inputPorta">Porta:</label>
+    <input type="text" id="inputPorta" placeholder="Digite a porta" value="3000"><br><br>
+    <label for="inputnome">Nome Aluno:</label>
+    <input type="text" id="inputnome" placeholder="Digite o nome do aluno">
+    <br><br>
+    <label for="inputnota">Nota:</label>
+    <input type="text" id="inputnota" placeholder="Digite o valor da nota">
+    <button onclick="enviarMensagem()">Enviar</button>
+    <br>
+    <br>
+    <h3> Resposta do servidor</h3>
+    <span id="respostaDoServidor">.....</span>
+
+    <script>
+        // CLIENTE HTML
+
+        async function enviarMensagem() {
+            const mensagem = document.getElementById('inputnome').value;
+            const enderecoServidor = document.getElementById('enderecoServidorInput').value;
+            const porta = document.getElementById('inputPorta').value;
+
+            const meuPacoteDeDados = {
+                nome: document.getElementById('inputnome').value,
+                nota: parseFloat(document.getElementById('inputnota').value)
+            };
+
+            try {
+                const response = await fetch(`http://${enderecoServidor}:${porta}/enviar-mensagem`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(meuPacoteDeDados),
+                });
+
+                const data = await response.text();
+
+                const { aprovado } = JSON.parse(data);
+
+                document.getElementById("respostaDoServidor").innerHTML = aprovado;
+
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro na comunicação com o servidor');
+            }
+        }
+    </script>
+</body>
+
+</html>

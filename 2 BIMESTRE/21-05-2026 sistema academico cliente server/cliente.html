@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Acadêmico</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #0d0f14;
+            --surface: #13161e;
+            --surface2: #1a1e2a;
+            --border: #252a38;
+            --accent: #00e5ff;
+            --accent2: #7c3aed;
+            --success: #00c97a;
+            --error: #ff4757;
+            --warning: #ffb300;
+            --text: #e8ecf5;
+            --muted: #5a6180;
+            --mono: 'Space Mono', monospace;
+            --sans: 'Syne', sans-serif;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--sans);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+        }
+
+        /* Noise overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        header {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+
+        .header-tag {
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            color: var(--accent);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .header-tag::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 1px;
+            background: var(--accent);
+        }
+
+        h1 {
+            font-size: clamp(2rem, 6vw, 3.2rem);
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            color: var(--text);
+        }
+
+        h1 span {
+            color: var(--accent);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin-bottom: 1.25rem;
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .card:hover {
+            border-color: #353a50;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent2), var(--accent));
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .card:focus-within::before {
+            opacity: 1;
+        }
+
+        .card-title {
+            font-family: var(--mono);
+            font-size: 0.65rem;
+            color: var(--muted);
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .card-title .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent);
+            flex-shrink: 0;
+        }
+
+        /* Form rows */
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .form-row.single {
+            grid-template-columns: 1fr;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        label {
+            font-family: var(--mono);
+            font-size: 0.6rem;
+            color: var(--muted);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 0.65rem 0.85rem;
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            width: 100%;
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            -moz-appearance: textfield;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+        }
+
+        input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.08);
+        }
+
+        input::placeholder {
+            color: var(--muted);
+            opacity: 0.6;
+        }
+
+        /* Grades grid */
+        .grades-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.75rem;
+        }
+
+        .grade-field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .grade-field label {
+            font-family: var(--mono);
+            font-size: 0.55rem;
+            color: var(--muted);
+            letter-spacing: 0.1em;
+        }
+
+        /* Image upload */
+        .upload-area {
+            border: 1px dashed var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s;
+            position: relative;
+        }
+
+        .upload-area:hover {
+            border-color: var(--accent);
+            background: rgba(0, 229, 255, 0.03);
+        }
+
+        .upload-area input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .upload-icon {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .upload-label {
+            font-family: var(--mono);
+            font-size: 0.7rem;
+            color: var(--muted);
+        }
+
+        .upload-label span {
+            color: var(--accent);
+        }
+
+        #previewImagem {
+            display: none;
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 6px;
+            margin-top: 1rem;
+            border: 1px solid var(--border);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s, box-shadow 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            box-shadow: 0 0 24px rgba(0, 229, 255, 0.3);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.99);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .btn-secondary {
+            width: 100%;
+            padding: 0.75rem;
+            background: transparent;
+            color: var(--accent2);
+            border: 1px solid var(--accent2);
+            border-radius: 8px;
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s;
+            margin-top: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(124, 58, 237, 0.1);
+            box-shadow: 0 0 16px rgba(124, 58, 237, 0.2);
+        }
+
+        .btn-secondary:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* Result */
+        .result-box {
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem 1.5rem;
+            font-family: var(--mono);
+            font-size: 0.8rem;
+            color: var(--muted);
+            transition: border-color 0.3s, color 0.3s;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .result-box.success {
+            border-color: var(--success);
+            color: var(--success);
+            background: rgba(0, 201, 122, 0.05);
+        }
+
+        .result-box.error {
+            border-color: var(--error);
+            color: var(--error);
+            background: rgba(255, 71, 87, 0.05);
+        }
+
+        .result-box.warning {
+            border-color: var(--warning);
+            color: var(--warning);
+            background: rgba(255, 179, 0, 0.05);
+        }
+
+        .result-box.loading {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .result-icon {
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .media-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        /* Spinner */
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border: 2px solid currentColor;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            flex-shrink: 0;
+        }
+
+        /* Connection section inline layout */
+        .conn-row {
+            display: grid;
+            grid-template-columns: 1fr 100px;
+            gap: 0.75rem;
+        }
+
+        @media (max-width: 500px) {
+            .grades-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .conn-row {
+                grid-template-columns: 1fr 80px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+
+        <header>
+            <div class="header-tag">Sistema de Gestão</div>
+            <h1>Acadê<span>mico</span></h1>
+        </header>
+
+        <!-- Conexão -->
+        <div class="card">
+            <div class="card-title"><span class="dot"></span>Configuração do Servidor</div>
+            <div class="conn-row">
+                <div class="field">
+                    <label for="enderecoServidorInput">Endereço</label>
+                    <input type="text" id="enderecoServidorInput" placeholder="localhost" value="localhost">
+                </div>
+                <div class="field">
+                    <label for="inputPorta">Porta</label>
+                    <input type="text" id="inputPorta" placeholder="3000" value="3000">
+                </div>
+            </div>
+        </div>
+
+        <!-- Dados do Aluno -->
+        <div class="card">
+            <div class="card-title"><span class="dot"></span>Dados do Aluno</div>
+            <div class="form-row">
+                <div class="field">
+                    <label for="ra">RA</label>
+                    <input type="number" id="ra" placeholder="000000">
+                </div>
+                <div class="field">
+                    <label for="nome">Nome</label>
+                    <input type="text" id="nome" placeholder="Nome completo">
+                </div>
+            </div>
+        </div>
+
+        <!-- Notas -->
+        <div class="card">
+            <div class="card-title"><span class="dot"></span>Notas Bimestrais</div>
+            <div class="grades-grid">
+                <div class="grade-field">
+                    <label for="n1">1º Bimestre</label>
+                    <input type="number" id="n1" placeholder="0.0" min="0" max="10" step="0.1">
+                </div>
+                <div class="grade-field">
+                    <label for="n2">2º Bimestre</label>
+                    <input type="number" id="n2" placeholder="0.0" min="0" max="10" step="0.1">
+                </div>
+                <div class="grade-field">
+                    <label for="n3">3º Bimestre</label>
+                    <input type="number" id="n3" placeholder="0.0" min="0" max="10" step="0.1">
+                </div>
+                <div class="grade-field">
+                    <label for="n4">4º Bimestre</label>
+                    <input type="number" id="n4" placeholder="0.0" min="0" max="10" step="0.1">
+                </div>
+            </div>
+
+            <button class="btn-primary" id="btnCalcular" onclick="calcularMedia()">
+                Calcular Média
+            </button>
+
+            <div id="respostaDoServidor" class="result-box" style="margin-top: 0.75rem;">
+                <span class="result-icon">○</span>
+                <span>Nenhum cálculo realizado ainda.</span>
+            </div>
+        </div>
+
+        <!-- Imagem -->
+        <div class="card">
+            <div class="card-title"><span class="dot"></span>Foto do Aluno</div>
+
+            <div class="upload-area" id="uploadArea">
+                <input type="file" id="inputImagem" accept="image/*" onchange="mostrarPreview(event)">
+                <div class="upload-icon">📎</div>
+                <div class="upload-label">Arraste ou clique para selecionar<br><span>imagem do aluno</span></div>
+            </div>
+
+            <img id="previewImagem" alt="Preview da imagem">
+
+            <button class="btn-secondary" id="btnEnviarImagem" onclick="enviarImagem()" disabled>
+                Enviar Foto ao Servidor
+            </button>
+
+            <div id="respostaImagem" class="result-box" style="margin-top: 0.75rem; display: none;">
+                <span class="result-icon"></span>
+                <span></span>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ─── Preview de imagem ───────────────────────────────────────────
+        function mostrarPreview(event) {
+            const input = event.target;
+            const preview = document.getElementById('previewImagem');
+            const btnEnviar = document.getElementById('btnEnviarImagem');
+            const uploadArea = document.getElementById('uploadArea');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    btnEnviar.disabled = false;
+                    uploadArea.querySelector('.upload-label').innerHTML =
+                        `<span>${input.files[0].name}</span>`;
+                };
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                preview.src = '';
+                preview.style.display = 'none';
+                btnEnviar.disabled = true;
+            }
+        }
+
+        // ─── Helpers de UI ───────────────────────────────────────────────
+        function setResult(divId, estado, icone, mensagem) {
+            const div = document.getElementById(divId);
+            div.className = `result-box ${estado}`;
+            div.style.display = 'flex';
+            div.innerHTML = '';
+
+            if (estado === 'loading') {
+                const spinner = document.createElement('div');
+                spinner.className = 'spinner';
+                div.appendChild(spinner);
+            } else {
+                const icon = document.createElement('span');
+                icon.className = 'result-icon';
+                icon.textContent = icone;
+                div.appendChild(icon);
+            }
+
+            const text = document.createElement('span');
+            text.innerHTML = mensagem;
+            div.appendChild(text);
+        }
+
+        function getBase() {
+            const host = document.getElementById('enderecoServidorInput').value.trim() || 'localhost';
+            const porta = document.getElementById('inputPorta').value.trim() || '3000';
+            return `http://${host}:${porta}`;
+        }
+
+        // ─── Calcular média ──────────────────────────────────────────────
+        async function calcularMedia() {
+            const n1 = document.getElementById('n1').value;
+            const n2 = document.getElementById('n2').value;
+            const n3 = document.getElementById('n3').value;
+            const n4 = document.getElementById('n4').value;
+            const btn = document.getElementById('btnCalcular');
+
+            // Validação: campos vazios ou não numéricos
+            if ([n1, n2, n3, n4].some(v => v === '' || isNaN(v))) {
+                setResult('respostaDoServidor', 'warning', '⚠', 'Preencha todas as quatro notas com valores numéricos.');
+                return;
+            }
+
+            btn.disabled = true;
+            setResult('respostaDoServidor', 'loading', '', 'Calculando...');
+
+            try {
+                const response = await fetch(`${getBase()}/enviar-mensagem`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ w: n1, x: n2, y: n3, z: n4 }),
+                });
+
+                if (!response.ok) throw new Error(`Servidor retornou status ${response.status}`);
+
+                const data = await response.json();
+                const media = parseFloat(data.media).toFixed(2);
+                const situacao = media >= 6 ? '✓ Aprovado' : '✗ Reprovado';
+                const cor = media >= 6 ? 'color: var(--success)' : 'color: var(--error)';
+
+                setResult(
+                    'respostaDoServidor', 'success', '✓',
+                    `Média: <span class="media-value">${media}</span>&nbsp;&nbsp;<span style="${cor}; font-size:0.7rem; font-weight:700">${situacao}</span>`
+                );
+            } catch (err) {
+                console.error(err);
+                setResult('respostaDoServidor', 'error', '✕', 'Não foi possível conectar ao servidor.');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+
+        // ─── Enviar imagem ───────────────────────────────────────────────
+        async function enviarImagem() {
+            const inputImagem = document.getElementById('inputImagem');
+            const btn = document.getElementById('btnEnviarImagem');
+
+            if (!inputImagem.files.length) {
+                setResult('respostaImagem', 'warning', '⚠', 'Selecione uma imagem antes de enviar.');
+                return;
+            }
+
+            btn.disabled = true;
+            setResult('respostaImagem', 'loading', '', 'Enviando imagem...');
+
+            const formData = new FormData();
+            formData.append('foto', inputImagem.files[0]);
+
+            try {
+                const response = await fetch(`${getBase()}/enviar-imagem`, {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (!response.ok) throw new Error(`Servidor retornou status ${response.status}`);
+
+                const data = await response.json();
+                setResult('respostaImagem', 'success', '✓', `${data.mensagem} — <i>${data.nomeArquivo}</i>`);
+            } catch (err) {
+                console.error(err);
+                setResult('respostaImagem', 'error', '✕', 'Erro ao enviar a imagem ao servidor.');
+            } finally {
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+
+</html>
