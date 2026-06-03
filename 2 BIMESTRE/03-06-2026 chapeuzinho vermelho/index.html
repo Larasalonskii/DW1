@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Consulta de Pessoas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <h1>Consulta ao Banco de Dados - Tabela Pessoa</h1>
+
+    <div class="container">
+        <h3>Todas as Pessoas</h3>
+        <button onclick="listarTodas()">Listar Todas</button>
+        <div id="resultadoTodas" class="resultado">...</div>
+    </div>
+
+    <div class="container">
+        <h3>Buscar por CPF (Chave Primária)</h3>
+        <label for="inputCpf">CPF:</label>
+        <input type="text" id="inputCpf" placeholder="Digite o CPF (ex: 12345678900)">
+        <button onclick="buscarPorCPF()">Buscar</button>
+        <div id="resultadoCPF" class="resultado">...</div>
+    </div>
+
+    <div class="container">
+        <h3>Buscar por Nome</h3>
+        <label for="inputNome">Nome:</label>
+        <input type="text" id="inputNome" placeholder="Digite o nome (ou parte dele)">
+        <button onclick="buscarPorNome()">Buscar</button>
+        <div id="resultadoNome" class="resultado">...</div>
+    </div>
+
+    <script>
+        const enderecoServidor = 'localhost';
+        const porta = '3001';
+
+        async function listarTodas() {
+            try {
+                const response = await fetch(`http://${enderecoServidor}:${porta}/pessoas`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.sucesso && data.pessoas.length > 0) {
+                    let tabela = '<table>';
+                    tabela += '<tr><th>CPF</th><th>Nome</th><th>Data de Nascimento</th></tr>';
+
+                    data.pessoas.forEach(pessoa => {
+                        const dataNascimento = pessoa.data_nascimento_pessoa ?
+                            new Date(pessoa.data_nascimento_pessoa).toLocaleDateString('pt-BR') :
+                            'Não informada';
+
+                        tabela += `<tr>
+                            <td>${pessoa.cpf_pessoa}</td>
+                            <td>${pessoa.nome_pessoa}</td>
+                            <td>${dataNascimento}</td>
+                        </tr>`;
+                    });
+
+                    tabela += '</table>';
+                    tabela += `<p><strong>Total de registros: ${data.quantidade}</strong></p>`;
+
+                    document.getElementById('resultadoTodas').innerHTML = `
+                        <div class="sucesso">
+                            ${tabela}
+                        </div>
+                    `;
+                } else if (data.sucesso && data.pessoas.length === 0) {
+                    document.getElementById('resultadoTodas').innerHTML = '<span>Nenhuma pessoa cadastrada</span>';
+                } else {
+                    document.getElementById('resultadoTodas').innerHTML = `<span class="erro">${data.mensagem}</span>`;
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                document.getElementById('resultadoTodas').innerHTML = '<span class="erro">Erro na comunicação com o servidor</span>';
+            }
+        }
+
+
+        async function buscarPorCPF() {
+            const cpf = document.getElementById('inputCpf').value.trim();
+
+            if (!cpf) {
+                document.getElementById('resultadoCPF').innerHTML = '<span class="erro">Por favor, digite um CPF</span>';
+                return;
+            }
+
+            try {
+                const response =
+                    await fetch(`http://${enderecoServidor}:${porta}/pessoa/cpf/${encodeURIComponent(cpf)}`, {
+                        method: 'GET',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    });
+
+                const data = await response.json();
+
+                if (data.sucesso) {
+                    const dataNascimento = data.pessoa.data_nascimento_pessoa ?
+                        new Date(data.pessoa.data_nascimento_pessoa).toLocaleDateString('pt-BR') :
+                        'Não informada';
+
+                    document.getElementById('resultadoCPF').innerHTML = `
+                        <div class="sucesso">
+                            <strong>Pessoa encontrada:</strong><br>
+                            CPF: ${data.pessoa.cpf_pessoa}<br>
+                            Nome: ${data.pessoa.nome_pessoa}<br>
+                            Data de Nascimento: ${dataNascimento}
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('resultadoCPF').innerHTML = `<span class="erro">${data.mensagem}</span>`;
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                document.getElementById('resultadoCPF').innerHTML = '<span class="erro">Erro na comunicação com o servidor</span>';
+            }
+        }
+
+        async function buscarPorNome() {
+            const nome = document.getElementById('inputNome').value.trim();
+
+            if (!nome) {
+                document.getElementById('resultadoNome').innerHTML = '<span class="erro">Por favor, digite um nome</span>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://${enderecoServidor}:${porta}/pessoa/nome/${encodeURIComponent(nome)}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.sucesso) {
+                    let tabela = '<table>';
+                    tabela += '<tr><th>CPF</th><th>Nome</th><th>Data de Nascimento</th></tr>';
+
+                    data.pessoas.forEach(pessoa => {
+                        const dataNascimento = pessoa.data_nascimento_pessoa ?
+                            new Date(pessoa.data_nascimento_pessoa).toLocaleDateString('pt-BR') :
+                            'Não informada';
+
+                        tabela += `<tr>
+                            <td>${pessoa.cpf_pessoa}</td>
+                            <td>${pessoa.nome_pessoa}</td>
+                            <td>${dataNascimento}</td>
+                        </tr>`;
+                    });
+
+                    tabela += '</table>';
+                    tabela += `<p><strong>Total encontrado: ${data.quantidade}</strong></p>`;
+
+                    document.getElementById('resultadoNome').innerHTML = `
+                        <div class="sucesso">
+                            ${tabela}
+                        </div>
+                    `;
+                } else {
+                    document.getElementById('resultadoNome').innerHTML = `<span class="erro">${data.mensagem}</span>`;
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                document.getElementById('resultadoNome').innerHTML = '<span class="erro">Erro na comunicação com o servidor</span>';
+            }
+        }
+
+
+    </script>
+</body>
+
+</html>
