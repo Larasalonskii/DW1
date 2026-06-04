@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Mensagens</title>
+</head>
+
+<body>
+    <div class="wrapper">
+    <h1>Mensagens</h1>
+
+    <button onclick="consultarEstoque()" id="btnConsultar">Consultar Estoque</button>
+    <button id="btnConfirmar" style="display: none" onclick="confirmarEnvio()">Confirmar Envio</button>
+    <button id="btnVerTabela" style="display: none" onclick="window.location.href='index.html'">Ver Tabela de Estoque</button>
+
+    <div id="chat"></div>
+
+    <script>
+        function adicionarMensagem(texto, tipo) {
+            const chat = document.getElementById('chat');
+            const p = document.createElement('p');
+            p.textContent = texto;
+            p.className = tipo === 'enviado' ? 'msg-enviada' : 'msg-recebida';
+            chat.appendChild(p);
+        }
+
+        async function consultarEstoque() {
+            document.getElementById('btnConsultar').disabled = true;
+            const response = await fetch('http://localhost:3001/produtos');
+            const data = await response.json();
+
+            adicionarMensagem('situacaoEstoque', 'enviado');
+
+            let mensagemResposta = '';
+            data.produtos.forEach(produto => {
+                if (produto.quantidade_produto < produto.quantidade_minima_produto) {
+                    let repor = produto.quantidade_maxima_produto - produto.quantidade_produto;
+                    mensagemResposta += `${produto.nome_produto}: repor ${repor} unidades\n`;
+                }
+            });
+
+            adicionarMensagem(mensagemResposta, 'recebido');
+            document.getElementById('btnConfirmar').style.display = 'inline-block';
+            document.getElementById('btnVerTabela').style.display = 'inline-block';
+        }
+
+        async function confirmarEnvio() {
+            document.getElementById('btnConfirmar').disabled = true;
+            const response = await fetch('http://localhost:3001/confirmar');
+            const data = await response.json();
+            adicionarMensagem('vouPrepararEEnviar', 'enviado');
+            adicionarMensagem(`${data.status} - ${data.mensagem}`, 'recebido');
+        }
+    </script>
+    </div>
+</body>
+
+</html>

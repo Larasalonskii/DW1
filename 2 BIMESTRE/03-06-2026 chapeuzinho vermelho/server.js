@@ -27,19 +27,19 @@ app.use((req, res, next) => {
 });
 
 // Rota para listar todas as pessoas
-app.get('/pessoas', async (req, res) => {
+app.get('/produtos', async (req, res) => {
     try {
-        const query = 'SELECT cpf_pessoa, nome_pessoa, data_nascimento_pessoa FROM public.pessoa ORDER BY nome_pessoa';
+        const query = 'SELECT id_produto, nome_produto, quantidade_produto, quantidade_minima_produto, quantidade_maxima_produto FROM public.produto ORDER BY nome_produto';
         const result = await pool.query(query);
         
         res.json({ 
             sucesso: true, 
-            pessoas: result.rows,
+            produtos: result.rows,
             quantidade: result.rows.length
         });
         
     } catch (error) {
-        console.error('Erro ao listar pessoas:', error);
+        console.error('Erro ao listar produtos:', error);
         res.status(500).json({ 
             sucesso: false, 
             mensagem: 'Erro interno do servidor' 
@@ -47,66 +47,11 @@ app.get('/pessoas', async (req, res) => {
     }
 });
 
-
-// Rota para buscar pessoa por CPF (PK)
-app.get('/pessoa/cpf/:cpf', async (req, res) => {
-    try {
-        const { cpf } = req.params; // Extrai o CPF dos parâmetros da URL. Extração usando desestruturação para obter o valor diretamente da propriedade 'cpf' do objeto 'req.params'.
-
-        // const cpf = req.params.cpf; // Extrai o CPF dos parâmetros da URL. Acessa diretamente a propriedade 'cpf' do objeto 'req.params' para obter o valor do CPF fornecido na URL.
-        
-        const query = 'SELECT cpf_pessoa, nome_pessoa, data_nascimento_pessoa FROM public.pessoa WHERE cpf_pessoa = $1';
-        const result = await pool.query(query, [cpf]);
-        
-        if (result.rows.length === 0) {
-            return res.status(404).json({ 
-                sucesso: false, 
-                mensagem: 'Pessoa não encontrada com este CPF' 
-            });
-        }
-        
-        res.json({ 
-            sucesso: true, 
-            pessoa: result.rows[0] 
-        });
-        
-    } catch (error) {
-        console.error('Erro ao buscar por CPF:', error);
-        res.status(500).json({ 
-            sucesso: false, 
-            mensagem: 'Erro interno do servidor' 
-        });
-    }
-});
-
-// Rota para buscar pessoa por nome (contém)
-app.get('/pessoa/nome/:nome', async (req, res) => {
-    try {
-        const { nome } = req.params;
-        
-        const query = 'SELECT cpf_pessoa, nome_pessoa, data_nascimento_pessoa FROM public.pessoa WHERE nome_pessoa ILIKE $1';
-        const result = await pool.query(query, [`%${nome}%`]);
-        
-        if (result.rows.length === 0) {
-            return res.status(404).json({ 
-                sucesso: false, 
-                mensagem: 'Nenhuma pessoa encontrada com este nome' 
-            });
-        }
-        
-        res.json({ 
-            sucesso: true, 
-            pessoas: result.rows,
-            quantidade: result.rows.length
-        });
-        
-    } catch (error) {
-        console.error('Erro ao buscar por nome:', error);
-        res.status(500).json({ 
-            sucesso: false, 
-            mensagem: 'Erro interno do servidor' 
-        });
-    }
+app.get('/confirmar', async (req, res) => {
+    res.json({
+        status: 'sucesso',
+        mensagem: 'pedidoRecebido'
+    });
 });
 
 
@@ -125,7 +70,5 @@ const ip = obterIP();
 app.listen(port, '0.0.0.0', () => {
     console.log(`Servidor rodando em http://${ip}:${port}`);
     console.log(`Rotas disponíveis:`);
-    console.log(`  GET http://${ip}:${port}/pessoas - Listar todas as pessoas`);
-    console.log(`  GET http://${ip}:${port}/pessoa/cpf/:cpf - Buscar por CPF`);
-    console.log(`  GET http://${ip}:${port}/pessoa/nome/:nome - Buscar por nome`);
+    console.log(`  GET http://${ip}:${port}/produtos - Listar todos os produtos`);
 });
