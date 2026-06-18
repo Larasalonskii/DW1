@@ -212,3 +212,44 @@ td:nth-child(6) {
     background: #e0a0aa;
     box-shadow: none;
 }
+
+#produtoSelect {
+    font-family: 'DM Sans', sans-serif;
+    background: #fdf8f9;
+    color: #8b3a4a;
+    border: 1.5px solid #ead8de;
+    border-radius: 10px;
+    padding: 11px 16px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    margin-bottom: 15px;
+    min-width: 220px;
+    transition: all 0.2s ease;
+}
+
+#produtoSelect:hover {
+    border-color: #c45a6e;
+}
+
+#produtoSelect:focus {
+    outline: none;
+    border-color: #c45a6e;
+    box-shadow: 0 0 0 4px rgba(196, 90, 110, 0.15);
+}
+
+.menu-produtos {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.botoes-principais {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+}

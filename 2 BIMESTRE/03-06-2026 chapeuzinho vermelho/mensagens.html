@@ -10,51 +10,229 @@
 
 <body>
     <div class="wrapper">
-    <h1>MENSAGENS</h1>
+        <h1>MENSAGENS</h1>
 
-    <button onclick="consultarEstoque()" id="btnConsultar">Consultar Estoque</button>
-    <button id="btnConfirmar" style="display: none" onclick="confirmarEnvio()">Confirmar Envio</button>
-    <button id="btnVerTabela" style="display: none" onclick="window.location.href='index.html'">Ver Tabela de Estoque</button>
+        <div class="menu-produtos">
+    <select id="produtoSelect">
+        <option value="">Selecione um produto</option>
+        <option value="1">Bolo</option>
+        <option value="2">Doce</option>
+        <option value="3">Bala</option>
+        <option value="4">Pão</option>
+    </select>
 
-    <div id="chat"></div>
+    <button onclick="consultarProdutoSelecionado()">
+        Ver Informações
+    </button>
 
-    <script>
-        function adicionarMensagem(texto, tipo) {
-            const chat = document.getElementById('chat');
-            const p = document.createElement('p');
-            p.textContent = texto;
-            p.className = tipo === 'enviado' ? 'msg-enviada' : 'msg-recebida';
-            chat.appendChild(p);
-        }
+    <button onclick="consultarQuantidade()">
+        Ver Quantidade
+    </button>
 
-        async function consultarEstoque() {
-            document.getElementById('btnConsultar').disabled = true;
-            const response = await fetch('http://localhost:3001/produtos');
-            const data = await response.json();
+    <button onclick="consultarQuantidadeMinima()">
+        Ver Quantidade Mínima
+    </button>
+</div>
 
-            adicionarMensagem('situacaoEstoque', 'enviado');
+<div class="botoes-principais">
+    <button onclick="consultarEstoque()" id="btnConsultar">
+        Consultar Estoque
+    </button>
 
-            let mensagemResposta = '';
-            data.produtos.forEach(produto => {
-                if (produto.quantidade_produto < produto.quantidade_minima_produto) {
-                    let repor = produto.quantidade_maxima_produto - produto.quantidade_produto;
-                    mensagemResposta += `${produto.nome_produto}: repor ${repor} unidades\n`;
+    <button id="btnConfirmar" style="display: none"
+    onclick="confirmarEnvio()">
+        Confirmar Envio
+    </button>
+
+    <button id="btnVerTabela" style="display: none"
+    onclick="window.location.href='index.html'">
+        Ver Tabela de Estoque
+    </button>
+</div>
+
+        <div id="chat"></div>
+
+        <script>
+
+
+            async function consultarQuantidadeMinima() {
+                try {
+                    const idProduto = Number(
+                        document.getElementById('produtoSelect').value
+                    );
+
+                    if (!idProduto) {
+                        adicionarMensagem('Selecione um produto.', 'recebido');
+                        return;
+                    }
+
+                    const response = await fetch('http://localhost:3001/produtos');
+                    const data = await response.json();
+
+                    const produto = data.produtos.find(
+                        produto => produto.id_produto === idProduto
+                    );
+
+                    if (!produto) {
+                        adicionarMensagem('Produto não encontrado.', 'recebido');
+                        return;
+                    }
+
+                    adicionarMensagem(produto.nome_produto, 'enviado');
+                    adicionarMensagem(
+                        `Quantidade mínima: ${produto.quantidade_minima_produto}`,
+                        'recebido'
+                    );
+
+                } catch (erro) {
+                    console.error(erro);
+                    adicionarMensagem('Erro ao consultar a quantidade mínima.', 'recebido');
                 }
-            });
+            }
+            async function consultarQuantidade() {
+                try {
+                    const idProduto = Number(
+                        document.getElementById('produtoSelect').value
+                    );
 
-            adicionarMensagem(mensagemResposta, 'recebido');
-            document.getElementById('btnConfirmar').style.display = 'inline-block';
-            document.getElementById('btnVerTabela').style.display = 'inline-block';
-        }
+                    if (!idProduto) {
+                        adicionarMensagem('Selecione um produto.', 'recebido');
+                        return;
+                    }
 
-        async function confirmarEnvio() {
-            document.getElementById('btnConfirmar').disabled = true;
-            const response = await fetch('http://localhost:3001/confirmar');
-            const data = await response.json();
-            adicionarMensagem('vouPrepararEEnviar', 'enviado');
-            adicionarMensagem(`${data.status} - ${data.mensagem}`, 'recebido');
-        }
-    </script>
+                    const response = await fetch('http://localhost:3001/produtos');
+                    const data = await response.json();
+
+                    const produto = data.produtos.find(
+                        produto => produto.id_produto === idProduto
+                    );
+
+                    if (!produto) {
+                        adicionarMensagem('Produto não encontrado.', 'recebido');
+                        return;
+                    }
+
+                    adicionarMensagem(produto.nome_produto, 'enviado');
+                    adicionarMensagem(
+                        `Quantidade disponível: ${produto.quantidade_produto}`,
+                        'recebido'
+                    );
+
+                } catch (erro) {
+                    console.error(erro);
+                    adicionarMensagem('Erro ao consultar a quantidade.', 'recebido');
+                }
+            }
+            async function mostrarProduto(idProduto) {
+                try {
+                    const response = await fetch('http://localhost:3001/produtos');
+                    const data = await response.json();
+
+                    const produto = data.produtos.find(
+                        produto => produto.id_produto === idProduto
+                    );
+
+                    if (!produto) {
+                        adicionarMensagem('Produto não encontrado.', 'recebido');
+                        return;
+                    }
+
+                    adicionarMensagem(produto.nome_produto, 'enviado');
+
+                    const mensagemResposta =
+                        `ID: ${produto.id_produto}
+Nome: ${produto.nome_produto}
+Quantidade: ${produto.quantidade_produto}
+Quantidade mínima: ${produto.quantidade_minima_produto}
+Quantidade máxima: ${produto.quantidade_maxima_produto}`;
+
+                    adicionarMensagem(mensagemResposta, 'recebido');
+
+                } catch (erro) {
+                    console.error(erro);
+                    adicionarMensagem('Erro ao consultar o produto.', 'recebido');
+                }
+            }
+
+
+            async function consultarProdutoSelecionado() {
+                const idProduto = Number(
+                    document.getElementById('produtoSelect').value
+                );
+
+                if (!idProduto) {
+                    adicionarMensagem('Selecione um produto.', 'recebido');
+                    return;
+                }
+
+                mostrarProduto(idProduto);
+            }
+            async function pao() {
+                try {
+                    const response = await fetch('http://localhost:3001/produtos');
+                    const data = await response.json();
+
+                    adicionarMensagem('pao', 'enviado');
+
+                    const pao = data.produtos.find(
+                        produto => produto.id_produto === 4
+                    );
+
+                    if (!pao) {
+                        adicionarMensagem('Pão não encontrado.', 'recebido');
+                        return;
+                    }
+
+                    const mensagemResposta =
+                        `ID: ${pao.id_produto}
+Nome: ${pao.nome_produto}
+Quantidade: ${pao.quantidade_produto}
+Quantidade mínima: ${pao.quantidade_minima_produto}
+Quantidade máxima: ${pao.quantidade_maxima_produto}`;
+
+                    adicionarMensagem(mensagemResposta, 'recebido');
+
+                } catch (erro) {
+                    console.error(erro);
+                    adicionarMensagem('Erro ao consultar o produto.', 'recebido');
+                }
+            }
+            function adicionarMensagem(texto, tipo) {
+                const chat = document.getElementById('chat');
+                const p = document.createElement('p');
+                p.textContent = texto;
+                p.className = tipo === 'enviado' ? 'msg-enviada' : 'msg-recebida';
+                chat.appendChild(p);
+            }
+
+            async function consultarEstoque() {
+                document.getElementById('btnConsultar').disabled = true;
+                const response = await fetch('http://localhost:3001/produtos');
+                const data = await response.json();
+
+                adicionarMensagem('situacaoEstoque', 'enviado');
+
+                let mensagemResposta = '';
+                data.produtos.forEach(produto => {
+                    if (produto.quantidade_produto < produto.quantidade_minima_produto) {
+                        let repor = produto.quantidade_maxima_produto - produto.quantidade_produto;
+                        mensagemResposta += `${produto.nome_produto}: repor ${repor} unidades\n`;
+                    }
+                });
+
+                adicionarMensagem(mensagemResposta, 'recebido');
+                document.getElementById('btnConfirmar').style.display = 'inline-block';
+                document.getElementById('btnVerTabela').style.display = 'inline-block';
+            }
+
+            async function confirmarEnvio() {
+                document.getElementById('btnConfirmar').disabled = true;
+                const response = await fetch('http://localhost:3001/confirmar');
+                const data = await response.json();
+                adicionarMensagem('vouPrepararEEnviar', 'enviado');
+                adicionarMensagem(`${data.status} - ${data.mensagem}`, 'recebido');
+            }
+        </script>
     </div>
 </body>
 
