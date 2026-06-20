@@ -13,10 +13,13 @@ const JWT_SECRET = process.env.JWT_SECRET || 'qualquercoisaaleatoria123';
 // ----------------------
 router.post('/cadastro', async (req, res) => {
     const { nome, cpf, usuario, senha } = req.body;
+    console.log(req.body);
 
     if (!nome || !cpf || !usuario || !senha) {
         return res.status(400).json({ erro: 'Preencha todos os campos.' });
     }
+
+
 
     try {
         // Verifica se o usuário ou CPF já existem
