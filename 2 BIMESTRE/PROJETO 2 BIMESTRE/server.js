@@ -23,9 +23,11 @@ app.use((req, res, next) => {
     next();
 });
 
-// ===================== LIVROS =====================
+// ================= LIVROS =================
 app.get('/livros', async (req, res) => {
+
     try {
+
         const result = await pool.query(`
             SELECT id_livro, titulo, ano_pulicacao, genero, id_autor, favorito
             FROM livro
@@ -47,13 +49,42 @@ app.get('/livros', async (req, res) => {
     }
 });
 
-app.get('/confirmar', (req, res) => {
-    res.json({
-        status: 'sucesso',
-        mensagem: 'pedidoRecebido'
-    });
+// ⭐ FAVORITAR (TOGGLE MELHORADO)
+app.post('/favoritar/:id', async (req, res) => {
+
+    try {
+
+        const { id } = req.params;
+
+        const result = await pool.query(`
+            UPDATE livro
+            SET favorito = NOT COALESCE(favorito, false)
+            WHERE id_livro = $1
+            RETURNING id_livro, favorito
+        `, [id]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({
+                ok: false,
+                mensagem: "Livro não encontrado"
+            });
+        }
+
+        res.json({
+            ok: true,
+            livro: result.rows[0]
+        });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            ok: false,
+            mensagem: "Erro ao favoritar"
+        });
+    }
 });
 
+// ================= IP =================
 const obterIP = () => {
     const interfaces = os.networkInterfaces();
     for (let nome in interfaces) {

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Livraria - Tabela</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="wrapper">
+
+<h1>CONSULTA DE LIVROS</h1>
+
+<div class="container">
+
+    <h3>SITUAÇÃO DOS LIVROS</h3>
+
+    <button onclick="listarTodosLivros()">
+        visualizar livros
+    </button>
+
+    <div id="resultadoTodas" class="resultado">...</div>
+
+</div>
+
+<div class="btn-voltar">
+    <button onclick="window.location.href='principalpage.html'">
+        ← voltar para Livraria
+    </button>
+</div>
+
+</div>
+
+<script>
+
+const enderecoServidor = 'localhost';
+const porta = '3001';
+
+async function listarTodosLivros() {
+
+    try {
+
+        const response = await fetch(
+            `http://${enderecoServidor}:${porta}/livros`
+        );
+
+        const data = await response.json();
+
+        if (data.sucesso && data.livros.length > 0) {
+
+            let tabela = `
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Título</th>
+                    <th>Gênero</th>
+                    <th>Ano</th>
+                    <th>Favorito</th>
+                </tr>
+            `;
+
+            data.livros.forEach(livro => {
+
+                let favorito = livro.favorito === true ? '⭐ SIM' : '—';
+
+                tabela += `
+                <tr>
+                    <td>${livro.id_livro}</td>
+                    <td>${livro.titulo.trim()}</td>
+                    <td>${livro.genero.trim()}</td>
+                    <td>${livro.ano_pulicacao}</td>
+                    <td>${favorito}</td>
+                </tr>
+                `;
+            });
+
+            tabela += `</table>`;
+
+            document.getElementById('resultadoTodas').innerHTML = tabela;
+
+        } else if (data.sucesso && data.livros.length === 0) {
+
+            document.getElementById('resultadoTodas').innerHTML =
+                '<span>Nenhum livro cadastrado</span>';
+
+        } else {
+
+            document.getElementById('resultadoTodas').innerHTML =
+                `<span class="erro">${data.mensagem}</span>`;
+        }
+
+    } catch (error) {
+
+        console.error(error);
+
+        document.getElementById('resultadoTodas').innerHTML =
+            '<span class="erro">Erro na comunicação com o servidor</span>';
+    }
+}
+
+</script>
+
+</body>
+</html>

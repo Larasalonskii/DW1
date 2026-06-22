@@ -20,6 +20,7 @@
 
 <!-- SELECT -->
 <div class="menu-genero">
+
     <select id="livroSelect">
         <option value="">Selecione Gênero</option>
         <option>Romance</option>
@@ -68,6 +69,8 @@
 
 <div id="chat"></div>
 
+<div id="tabelaLivros"></div>
+
 </div>
 
 <script>
@@ -80,21 +83,52 @@ function adicionarMensagem(texto, tipo) {
     chat.appendChild(p);
 }
 
-// ================= LIVROS =================
+// ================= FETCH BASE =================
+
+async function getLivros() {
+    const res = await fetch('http://localhost:3001/livros');
+    return await res.json();
+}
+
+// ================= LISTAR =================
 
 async function consultarLivros() {
-    const res = await fetch('http://localhost:3001/livros');
-    const data = await res.json();
 
-    adicionarMensagem("Todos os livros", "enviado");
+    const data = await getLivros();
 
-    let msg = "";
+    const container = document.getElementById("tabelaLivros");
+
+    let html = `
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Gênero</th>
+            <th>Ano</th>
+            <th>⭐</th>
+            <th>Ações</th>
+        </tr>
+    `;
 
     data.livros.forEach(l => {
-        msg += `${l.titulo.trim()} (${l.genero}) - ${l.ano_pulicacao}\n`;
+
+        html += `
+        <tr>
+            <td>${l.id_livro}</td>
+            <td>${l.titulo.trim()}</td>
+            <td>${l.genero.trim()}</td>
+            <td>${l.ano_pulicacao}</td>
+            <td>${l.favorito ? "⭐" : "—"}</td>
+            <td>
+                <button onclick="favoritarLivro(${l.id_livro})">⭐</button>
+            </td>
+        </tr>
+        `;
     });
 
-    adicionarMensagem(msg, "recebido");
+    html += `</table>`;
+
+    container.innerHTML = html;
 }
 
 // ================= FILTRO GÊNERO =================
@@ -108,8 +142,7 @@ async function consultarGeneroSelecionado() {
         return;
     }
 
-    const res = await fetch('http://localhost:3001/livros');
-    const data = await res.json();
+    const data = await getLivros();
 
     const filtrados = data.livros.filter(
         l => l.genero.trim().toLowerCase() === genero.trim().toLowerCase()
@@ -130,12 +163,11 @@ async function consultarGeneroSelecionado() {
 
 async function consultarLivrosFavoritos() {
 
-    const res = await fetch('http://localhost:3001/livros');
-    const data = await res.json();
+    const data = await getLivros();
 
     const fav = data.livros.filter(l => l.favorito === true);
 
-    adicionarMensagem("Livros favoritos", "enviado");
+    adicionarMensagem("⭐ Favoritos", "enviado");
 
     let msg = "";
 
@@ -146,7 +178,7 @@ async function consultarLivrosFavoritos() {
     adicionarMensagem(msg || "Nenhum favorito", "recebido");
 }
 
-// ================= QTD FAVORITOS POR GÊNERO =================
+// ================= QTD FAVORITOS =================
 
 async function consultarQtdFavoritosGenero() {
 
@@ -157,18 +189,37 @@ async function consultarQtdFavoritosGenero() {
         return;
     }
 
-    const res = await fetch('http://localhost:3001/livros');
-    const data = await res.json();
+    const data = await getLivros();
 
     const qtd = data.livros.filter(l =>
         l.genero.trim().toLowerCase() === genero.trim().toLowerCase()
         && l.favorito === true
     ).length;
 
-    adicionarMensagem(
-        `Favoritos em ${genero}: ${qtd}`,
-        "recebido"
-    );
+    adicionarMensagem(`Favoritos em ${genero}: ${qtd}`, "recebido");
+}
+
+async function favoritarLivro(id) {
+    console.log("clicou no id:", id);
+
+    const res = await fetch(`http://localhost:3001/favoritar/${id}`, {
+        method: "POST"
+    });
+
+    const data = await res.json();
+
+    console.log("resposta:", data);
+
+    consultarLivros();
+}
+
+async function bloquearLivro(id) {
+
+    await fetch(`http://localhost:3001/bloquear/${id}`, {
+        method: "POST"
+    });
+
+    consultarLivros();
 }
 
 </script>
