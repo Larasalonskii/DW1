@@ -1,16 +1,72 @@
-// server.js
 const express = require('express');
-const cors = require('cors');
-const authRoutes = require('./authRoutes');
+const os = require('os');
+const { Pool } = require('pg');
+require('dotenv').config();
 
 const app = express();
-app.use(cors()); // permite que seu HTML (rodando em outra porta/arquivo) acesse a API
-app.use(express.json()); // permite ler JSON no corpo das requisições
+const port = process.env.PORT || 3001;
 
-app.use('/api', authRoutes); // POST /api/cadastro  e  POST /api/login
-
-const PORTA = process.env.PORT || 3000;
-app.listen(PORTA, () => {
-    console.log(`Servidor rodando em http://localhost:${PORTA}`);
+const pool = new Pool({
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    database: process.env.DB_NAME,
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
 });
 
+app.use(express.json());
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
+
+// ===================== LIVROS =====================
+app.get('/livros', async (req, res) => {
+    try {
+        const result = await pool.query(`
+            SELECT id_livro, titulo, ano_pulicacao, genero, id_autor, favorito
+            FROM livro
+            ORDER BY titulo
+        `);
+
+        res.json({
+            sucesso: true,
+            livros: result.rows,
+            quantidade: result.rows.length
+        });
+
+    } catch (error) {
+        console.error('Erro ao listar livros:', error);
+        res.status(500).json({
+            sucesso: false,
+            mensagem: 'Erro interno do servidor'
+        });
+    }
+});
+
+app.get('/confirmar', (req, res) => {
+    res.json({
+        status: 'sucesso',
+        mensagem: 'pedidoRecebido'
+    });
+});
+
+const obterIP = () => {
+    const interfaces = os.networkInterfaces();
+    for (let nome in interfaces) {
+        for (let info of interfaces[nome]) {
+            if (info.family === 'IPv4' && !info.internal) return info.address;
+        }
+    }
+    return 'localhost';
+};
+
+const ip = obterIP();
+
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Servidor rodando em http://${ip}:${port}`);
+    console.log(`GET http://${ip}:${port}/livros`);
+});

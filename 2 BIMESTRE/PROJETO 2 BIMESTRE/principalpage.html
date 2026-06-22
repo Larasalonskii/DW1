@@ -1,11 +1,177 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shelfy</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Livraria</title>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-    <h1>HEY SHELFYYYY</h1>
+
+<div class="boasvindas">
+    <h2>Sejam bem-vindos à nossa livraria digital</h2>
+</div>
+
+<div class="wrapper">
+
+<h1>MENSAGENS</h1>
+
+<!-- SELECT -->
+<div class="menu-genero">
+    <select id="livroSelect">
+        <option value="">Selecione Gênero</option>
+        <option>Romance</option>
+        <option>Ficção Distópica</option>
+        <option>Sátira Política</option>
+        <option>Realismo Mágico</option>
+        <option>Fantasia</option>
+        <option>Policial</option>
+        <option>Ficção Científica</option>
+        <option>Poesia</option>
+        <option>Contos</option>
+        <option>Novela</option>
+        <option>Aventura</option>
+        <option>Terror</option>
+        <option>Suspense</option>
+        <option>Distopia</option>
+        <option>Infantil</option>
+        <option>Fábula</option>
+        <option>Épico</option>
+    </select>
+
+    <div class="botoes-principais">
+
+        <button onclick="consultarGeneroSelecionado()">
+            Procurar Gênero
+        </button>
+
+        <button onclick="consultarQtdFavoritosGenero()">
+            Favoritos do Gênero
+        </button>
+
+        <button onclick="consultarLivros()">
+            Consultar Todos os Livros
+        </button>
+
+        <button onclick="consultarLivrosFavoritos()">
+            Consultar Favoritos
+        </button>
+
+        <button onclick="location.href='index.html'">
+            Ver Tabela
+        </button>
+
+    </div>
+</div>
+
+<div id="chat"></div>
+
+</div>
+
+<script>
+
+function adicionarMensagem(texto, tipo) {
+    const chat = document.getElementById('chat');
+    const p = document.createElement('p');
+    p.textContent = texto;
+    p.className = tipo === 'enviado' ? 'msg-enviada' : 'msg-recebida';
+    chat.appendChild(p);
+}
+
+// ================= LIVROS =================
+
+async function consultarLivros() {
+    const res = await fetch('http://localhost:3001/livros');
+    const data = await res.json();
+
+    adicionarMensagem("Todos os livros", "enviado");
+
+    let msg = "";
+
+    data.livros.forEach(l => {
+        msg += `${l.titulo.trim()} (${l.genero}) - ${l.ano_pulicacao}\n`;
+    });
+
+    adicionarMensagem(msg, "recebido");
+}
+
+// ================= FILTRO GÊNERO =================
+
+async function consultarGeneroSelecionado() {
+
+    const genero = document.getElementById('livroSelect').value;
+
+    if (!genero) {
+        adicionarMensagem("Selecione um gênero", "recebido");
+        return;
+    }
+
+    const res = await fetch('http://localhost:3001/livros');
+    const data = await res.json();
+
+    const filtrados = data.livros.filter(
+        l => l.genero.trim().toLowerCase() === genero.trim().toLowerCase()
+    );
+
+    adicionarMensagem(genero, "enviado");
+
+    let msg = "";
+
+    filtrados.forEach(l => {
+        msg += `${l.titulo.trim()} - ${l.ano_pulicacao}\n`;
+    });
+
+    adicionarMensagem(msg || "Nenhum livro encontrado", "recebido");
+}
+
+// ================= FAVORITOS =================
+
+async function consultarLivrosFavoritos() {
+
+    const res = await fetch('http://localhost:3001/livros');
+    const data = await res.json();
+
+    const fav = data.livros.filter(l => l.favorito === true);
+
+    adicionarMensagem("Livros favoritos", "enviado");
+
+    let msg = "";
+
+    fav.forEach(l => {
+        msg += `${l.titulo.trim()} (${l.genero})\n`;
+    });
+
+    adicionarMensagem(msg || "Nenhum favorito", "recebido");
+}
+
+// ================= QTD FAVORITOS POR GÊNERO =================
+
+async function consultarQtdFavoritosGenero() {
+
+    const genero = document.getElementById('livroSelect').value;
+
+    if (!genero) {
+        adicionarMensagem("Selecione um gênero", "recebido");
+        return;
+    }
+
+    const res = await fetch('http://localhost:3001/livros');
+    const data = await res.json();
+
+    const qtd = data.livros.filter(l =>
+        l.genero.trim().toLowerCase() === genero.trim().toLowerCase()
+        && l.favorito === true
+    ).length;
+
+    adicionarMensagem(
+        `Favoritos em ${genero}: ${qtd}`,
+        "recebido"
+    );
+}
+
+</script>
+
 </body>
 </html>
