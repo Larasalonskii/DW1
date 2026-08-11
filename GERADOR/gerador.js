@@ -63,7 +63,7 @@ function atributosParametros() {
 
 }
 
-function gerarClasse() {
+function gerarModel() {
 
 
     listaAtributos = obterDados();
@@ -92,7 +92,7 @@ function gerarClasse() {
 }
 
 
-function gerarHTML() {
+function gerarView() {
 
     listaAtributos = obterDados();
     nomeParaSalvar = plMaius(nomeClasse) + ".html";
@@ -173,7 +173,7 @@ function gerarHTML() {
     return codigo;
 }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-function gerarControle(listaAtributos) {
+function gerarController(listaAtributos) {
     listaAtributos = obterDados();
     nomeParaSalvar = plMaius(nomeClasse) + "Controle.js";
     // console.log(listaAtributos[0].nome);
