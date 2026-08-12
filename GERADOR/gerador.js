@@ -104,6 +104,7 @@ function gerarView() {
         "    <meta charset=\"UTF-8\">\n" +
         "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
         "    <title>CRUD " + nomeClasse + "</title>\n" +
+        "    <link rel=\"stylesheet\" href=\""+nomeClasse+".css\">\n"+
         "</head>\n" +
         "\n" +
         "<body>\n\n";
@@ -597,5 +598,296 @@ function plMinus(palavra) {
     return palavra.substring(0, 1).toLowerCase() + palavra.substring(1, palavra.length);
 }
 
+function gerarcss(){
+    codigo = ""
 
+    codigo = ":root {\n" +
+        "    --rosa: #ff69b4;\n" +
+        "    --rosa-escuro: #c71585;\n" +
+        "    --preto: #0f0f0f;\n" +
+        "    --cinza: #1a1a1a;\n" +
+        "    --borda: #2a2a2a;\n" +
+        "    --texto: #eaeaea;\n" +
+        "}\n" +
+        "\n" +
+        "/* RESET */\n" +
+        "* {\n" +
+        "    margin: 0;\n" +
+        "    padding: 0;\n" +
+        "    box-sizing: border-box;\n" +
+        "}\n" +
+        "\n" +
+        "/* HTML só serve pra centralizar o \"card\" (body) na tela */\n" +
+        "html {\n" +
+        "    min-height: 100vh;\n" +
+        "    display: flex;\n" +
+        "    justify-content: center;\n" +
+        "    background: radial-gradient(circle at top, #1a1a1a, #0f0f0f);\n" +
+        "}\n" +
+        "\n" +
+        "/* BODY = CONTAINER/CARD (fluxo normal em bloco, sem flex, pra labels/inputs ficarem alinhados à esquerda) */\n" +
+        "body {\n" +
+        "    font-family: \"Courier New\", monospace;\n" +
+        "    color: #ffb6d9;\n" +
+        "\n" +
+        "    width: 100%;\n" +
+        "    max-width: 620px;\n" +
+        "    align-self: flex-start;\n" +
+        "\n" +
+        "    margin: 40px 20px;\n" +
+        "    background: var(--cinza);\n" +
+        "    padding: 26px 30px;\n" +
+        "    border-radius: 18px;\n" +
+        "\n" +
+        "    border: 1px solid rgba(255, 105, 180, 0.4);\n" +
+        "\n" +
+        "    box-shadow:\n" +
+        "        0 0 10px rgba(255, 105, 180, 0.3),\n" +
+        "        0 0 25px rgba(255, 105, 180, 0.2),\n" +
+        "        0 0 60px rgba(255, 105, 180, 0.15),\n" +
+        "        0 10px 30px rgba(0, 0, 0, 0.8);\n" +
+        "\n" +
+        "    transition: 0.3s;\n" +
+        "}\n" +
+        "\n" +
+        "body:hover {\n" +
+        "    box-shadow:\n" +
+        "        0 0 15px rgba(255, 105, 180, 0.5),\n" +
+        "        0 0 40px rgba(255, 105, 180, 0.3),\n" +
+        "        0 0 80px rgba(255, 105, 180, 0.2),\n" +
+        "        0 15px 40px rgba(0, 0, 0, 0.9);\n" +
+        "}\n" +
+        "\n" +
+        "/* TITULO */\n" +
+        "h1 {\n" +
+        "    text-align: center;\n" +
+        "    font-size: 22px;\n" +
+        "    margin-bottom: 20px;\n" +
+        "    color: var(--rosa);\n" +
+        "    text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);\n" +
+        "    letter-spacing: 1px;\n" +
+        "}\n" +
+        "\n" +
+        "/* LABEL */\n" +
+        "label {\n" +
+        "    display: block;\n" +
+        "    width: 100%;\n" +
+        "    text-align: left;\n" +
+        "\n" +
+        "    margin-top: 10px;\n" +
+        "    margin-bottom: 4px;\n" +
+        "\n" +
+        "    font-size: 11px;\n" +
+        "    font-weight: 700;\n" +
+        "    text-transform: uppercase;\n" +
+        "    letter-spacing: 0.6px;\n" +
+        "    color: var(--rosa);\n" +
+        "    opacity: 0.85;\n" +
+        "}\n" +
+        "\n" +
+        "/* primeiro label do form não precisa de tanto espaço em cima */\n" +
+        "label:first-of-type {\n" +
+        "    margin-top: 0;\n" +
+        "}\n" +
+        "\n" +
+        "/* INPUTS DE TEXTO/DATA/NUMERO */\n" +
+        "input[type=\"text\"],\n" +
+        "input[type=\"number\"],\n" +
+        "input[type=\"date\"],\n" +
+        "input[type=\"email\"],\n" +
+        "input[type=\"password\"],\n" +
+        "select,\n" +
+        "textarea {\n" +
+        "    display: block;\n" +
+        "    width: 100%;\n" +
+        "    padding: 8px 10px;\n" +
+        "    margin-bottom: 4px;\n" +
+        "\n" +
+        "    background: #111;\n" +
+        "    border: 1px solid var(--borda);\n" +
+        "    border-radius: 6px;\n" +
+        "    color: #ffb6d9;\n" +
+        "\n" +
+        "    font-family: \"Courier New\", monospace;\n" +
+        "    font-size: 13px;\n" +
+        "    line-height: 1.3;\n" +
+        "\n" +
+        "    transition: 0.25s;\n" +
+        "}\n" +
+        "\n" +
+        "/* FOCO NEON */\n" +
+        "input[type=\"text\"]:focus,\n" +
+        "input[type=\"number\"]:focus,\n" +
+        "input[type=\"date\"]:focus,\n" +
+        "input[type=\"email\"]:focus,\n" +
+        "input[type=\"password\"]:focus,\n" +
+        "select:focus,\n" +
+        "textarea:focus {\n" +
+        "    outline: none;\n" +
+        "    border-color: var(--rosa);\n" +
+        "    box-shadow:\n" +
+        "        0 0 5px var(--rosa),\n" +
+        "        0 0 15px rgba(255, 105, 180, 0.4);\n" +
+        "}\n" +
+        "\n" +
+        "/* date/number picker fica esquisito no fundo escuro, ajusta os ícones */\n" +
+        "input[type=\"date\"]::-webkit-calendar-picker-indicator {\n" +
+        "    filter: invert(60%) sepia(80%) saturate(1000%) hue-rotate(290deg);\n" +
+        "    cursor: pointer;\n" +
+        "}\n" +
+        "\n" +
+        "/* TEXTAREA (caso algum CRUD use) */\n" +
+        "textarea {\n" +
+        "    min-height: 120px;\n" +
+        "    resize: vertical;\n" +
+        "}\n" +
+        "\n" +
+        "/* PLACEHOLDER */\n" +
+        "input::placeholder,\n" +
+        "textarea::placeholder {\n" +
+        "    color: #ffb6d9aa;\n" +
+        "}\n" +
+        "\n" +
+        "/* BOTÕES (inputs type=button/submit/reset) */\n" +
+        "input[type=\"button\"],\n" +
+        "input[type=\"submit\"],\n" +
+        "input[type=\"reset\"],\n" +
+        "button {\n" +
+        "    display: inline-block;\n" +
+        "    width: auto;\n" +
+        "\n" +
+        "    background: transparent;\n" +
+        "    color: var(--rosa);\n" +
+        "    border: 1px solid var(--rosa);\n" +
+        "\n" +
+        "    padding: 7px 14px;\n" +
+        "    margin: 3px 8px 3px 0;\n" +
+        "    border-radius: 8px;\n" +
+        "\n" +
+        "    cursor: pointer;\n" +
+        "    transition: 0.25s;\n" +
+        "\n" +
+        "    font-family: \"Courier New\", monospace;\n" +
+        "    font-size: 12px;\n" +
+        "    font-weight: 600;\n" +
+        "}\n" +
+        "\n" +
+        "/* linha do Id: input pequeno + botões de ação lado a lado */\n" +
+        "#inputId {\n" +
+        "    display: inline-block;\n" +
+        "    width: 140px;\n" +
+        "    margin-right: 8px;\n" +
+        "    vertical-align: middle;\n" +
+        "}\n" +
+        "\n" +
+        "[id^=\"bt\"] {\n" +
+        "    vertical-align: middle;\n" +
+        "}\n" +
+        "\n" +
+        "input[type=\"button\"]:hover,\n" +
+        "input[type=\"submit\"]:hover,\n" +
+        "input[type=\"reset\"]:hover,\n" +
+        "button:hover {\n" +
+        "    background: var(--rosa);\n" +
+        "    color: white;\n" +
+        "\n" +
+        "    box-shadow:\n" +
+        "        0 0 10px var(--rosa),\n" +
+        "        0 0 25px rgba(255, 105, 180, 0.6);\n" +
+        "\n" +
+        "    transform: translateY(-2px);\n" +
+        "}\n" +
+        "\n" +
+        "input[type=\"button\"]:active,\n" +
+        "input[type=\"submit\"]:active,\n" +
+        "button:active {\n" +
+        "    transform: scale(0.96);\n" +
+        "}\n" +
+        "\n" +
+        "/* botão desabilitado */\n" +
+        "input[type=\"button\"]:disabled {\n" +
+        "    opacity: 0.4;\n" +
+        "    cursor: not-allowed;\n" +
+        "    transform: none;\n" +
+        "    box-shadow: none;\n" +
+        "}\n" +
+        "\n" +
+        "/* DIV DE AVISO (mensagens de erro/sucesso) */\n" +
+        "#divAviso {\n" +
+        "    background: #1a0f14 !important;\n" +
+        "    border: 1px solid var(--rosa-escuro);\n" +
+        "    border-left: 4px solid var(--rosa);\n" +
+        "    border-radius: 8px;\n" +
+        "    padding: 12px 16px;\n" +
+        "    color: #ffdcee;\n" +
+        "    min-height: 20px;\n" +
+        "    font-size: 13px;\n" +
+        "}\n" +
+        "\n" +
+        "/* DIV/TEXTO DE SAIDA (listagem, JSON, resultado) */\n" +
+        "#outputSaida,\n" +
+        ".saida {\n" +
+        "    background: #050505 !important;\n" +
+        "    border: 1px dashed var(--rosa);\n" +
+        "    border-radius: 10px;\n" +
+        "    padding: 14px;\n" +
+        "    color: #ffb6d9;\n" +
+        "    font-size: 13px;\n" +
+        "    line-height: 1.6;\n" +
+        "    white-space: pre-wrap;\n" +
+        "    word-break: break-word;\n" +
+        "    min-height: 60px;\n" +
+        "}\n" +
+        "\n" +
+        "/* SCROLLBAR */\n" +
+        "::-webkit-scrollbar {\n" +
+        "    width: 8px;\n" +
+        "}\n" +
+        "\n" +
+        "::-webkit-scrollbar-thumb {\n" +
+        "    background: var(--rosa);\n" +
+        "    border-radius: 10px;\n" +
+        "}\n" +
+        "\n" +
+        "/* reduz o espaço extra dos <br><br> que o gerador injeta */\n" +
+        "br {\n" +
+        "    line-height: 0.9;\n" +
+        "    content: \"\";\n" +
+        "    display: block;\n" +
+        "    margin-top: 6px;\n" +
+        "}\n" +
+        "\n" +
+        "/* LINHA HORIZONTAL, SE HOUVER */\n" +
+        "hr {\n" +
+        "    border: none;\n" +
+        "    border-top: 1px solid var(--borda);\n" +
+        "    margin: 20px 0;\n" +
+        "}\n" +
+        "\n" +
+        "/* TABELAS, CASO ALGUM CRUD LISTE EM TABLE */\n" +
+        "table {\n" +
+        "    width: 100%;\n" +
+        "    border-collapse: collapse;\n" +
+        "    margin-top: 15px;\n" +
+        "}\n" +
+        "\n" +
+        "th, td {\n" +
+        "    padding: 8px 10px;\n" +
+        "    border: 1px solid var(--borda);\n" +
+        "    text-align: left;\n" +
+        "    font-size: 13px;\n" +
+        "}\n" +
+        "\n" +
+        "th {\n" +
+        "    background: #150a10;\n" +
+        "    color: var(--rosa);\n" +
+        "}\n" +
+        "\n" +
+        "tr:hover td {\n" +
+        "    background: rgba(255, 105, 180, 0.08);\n" +
+        "}\n";
 
+    document.getElementById('saida').value = codigo;
+
+    return codigo;
+}
