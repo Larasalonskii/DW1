@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Livro - Banco de Dados</title>
+    <link rel="stylesheet" href="livro.css">
+</head>
+
+<body onload="listar()">
+
+    <div class="container">
+        <h1>Cadastro de Livro</h1>
+
+        <label for="inputId_livro">Id_livro</label>
+        <input type="text" name="inputId_livro" id="inputId_livro">
+        <input type="button" value="Procure" id="btProcure" onclick="procure()" style="display:inline;">
+        <input type="button" value="Inserir" id="btInserir" onclick="inserir()" style="display:none;">
+        <input type="button" value="Alterar" id="btAlterar" onclick="alterar()" style="display:none;">
+        <input type="button" value="Excluir" id="btExcluir" onclick="excluir()" style="display:none;">
+
+        <label for="inputTitulo_carro">Titulo_livro</label>
+        <input type="text" name="inputTitulo_livro" id="inputTitulo_livro">
+
+        <label for="inputAutor_livro">Autor_livro</label>
+        <input type="text" name="inputAutor_livro" id="inputAutor_livro">
+
+        <label for="inputAno_de_Lancamento">Ano_de_Lancamento</label>
+        <input type="number" name="inputAno_de_Lancamento" id="inputAno_de_Lancamento">
+
+        <label for="inputGenero_livro">Genero_livro</label>
+        <input type="text" name="inputGenero_livro" id="inputGenero_livro">
+
+        <label for="inputPaginas_livro">Paginas_livro</label>
+        <input type="number" name="inputPaginas_livro" id="inputPaginas_livro">
+
+
+
+        <div id="divAviso">Informe o ID e clique em Procure</div>
+
+        <input type="button" value="Salvar" id="btSalvar" onclick="salvar()" style="display:none;">
+        <input type="button" value="Cancelar" id="btCancelar" onclick="cancelarOperacao()" style="display:none;">
+
+        <br>
+        <h3>Livros Cadastrados:</h3>
+        <br>
+        <div id="outputSaida">Carregando...</div>
+    </div>
+
+
+    <script src="./livroControle.js"></script>
+</body>
+
+</html>
