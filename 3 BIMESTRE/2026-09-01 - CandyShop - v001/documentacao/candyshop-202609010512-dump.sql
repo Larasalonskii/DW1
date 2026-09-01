@@ -5,11 +5,11 @@ CREATE TABLE public.cargo (
 );
 
 
-ALTER TABLE public.cargo OWNER TO radames;
+ALTER TABLE public.cargo OWNER TO postgres;
 
 --
 -- TOC entry 210 (class 1259 OID 41501)
--- Name: cargo_id_cargo_seq; Type: SEQUENCE; Schema: public; Owner: radames
+-- Name: cargo_id_cargo_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE public.cargo_id_cargo_seq
@@ -21,12 +21,12 @@ CREATE SEQUENCE public.cargo_id_cargo_seq
     CACHE 1;
 
 
-ALTER TABLE public.cargo_id_cargo_seq OWNER TO radames;
+ALTER TABLE public.cargo_id_cargo_seq OWNER TO postgres;
 
 --
 -- TOC entry 3451 (class 0 OID 0)
 -- Dependencies: 210
--- Name: cargo_id_cargo_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: radames
+-- Name: cargo_id_cargo_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE public.cargo_id_cargo_seq OWNED BY public.cargo.id_cargo;
@@ -34,7 +34,7 @@ ALTER SEQUENCE public.cargo_id_cargo_seq OWNED BY public.cargo.id_cargo;
 
 --
 -- TOC entry 213 (class 1259 OID 41523)
--- Name: cliente; Type: TABLE; Schema: public; Owner: radames
+-- Name: cliente; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.cliente (
@@ -44,11 +44,11 @@ CREATE TABLE public.cliente (
 );
 
 
-ALTER TABLE public.cliente OWNER TO radames;
+ALTER TABLE public.cliente OWNER TO postgres;
 
 --
 -- TOC entry 220 (class 1259 OID 41568)
--- Name: forma_pagamento; Type: TABLE; Schema: public; Owner: radames
+-- Name: forma_pagamento; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.forma_pagamento (
@@ -57,11 +57,11 @@ CREATE TABLE public.forma_pagamento (
 );
 
 
-ALTER TABLE public.forma_pagamento OWNER TO radames;
+ALTER TABLE public.forma_pagamento OWNER TO postgres;
 
 --
 -- TOC entry 219 (class 1259 OID 41567)
--- Name: forma_pagamento_id_forma_pagamento_seq; Type: SEQUENCE; Schema: public; Owner: radames
+-- Name: forma_pagamento_id_forma_pagamento_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE public.forma_pagamento_id_forma_pagamento_seq
@@ -73,12 +73,12 @@ CREATE SEQUENCE public.forma_pagamento_id_forma_pagamento_seq
     CACHE 1;
 
 
-ALTER TABLE public.forma_pagamento_id_forma_pagamento_seq OWNER TO radames;
+ALTER TABLE public.forma_pagamento_id_forma_pagamento_seq OWNER TO postgres;
 
 --
 -- TOC entry 3452 (class 0 OID 0)
 -- Dependencies: 219
--- Name: forma_pagamento_id_forma_pagamento_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: radames
+-- Name: forma_pagamento_id_forma_pagamento_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE public.forma_pagamento_id_forma_pagamento_seq OWNED BY public.forma_pagamento.id_forma_pagamento;
@@ -86,7 +86,7 @@ ALTER SEQUENCE public.forma_pagamento_id_forma_pagamento_seq OWNED BY public.for
 
 --
 -- TOC entry 212 (class 1259 OID 41508)
--- Name: funcionario; Type: TABLE; Schema: public; Owner: radames
+-- Name: funcionario; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.funcionario (
@@ -97,11 +97,11 @@ CREATE TABLE public.funcionario (
 );
 
 
-ALTER TABLE public.funcionario OWNER TO radames;
+ALTER TABLE public.funcionario OWNER TO postgres;
 
 --
 -- TOC entry 218 (class 1259 OID 41557)
--- Name: pagamento; Type: TABLE; Schema: public; Owner: radames
+-- Name: pagamento; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.pagamento (
@@ -111,11 +111,11 @@ CREATE TABLE public.pagamento (
 );
 
 
-ALTER TABLE public.pagamento OWNER TO radames;
+ALTER TABLE public.pagamento OWNER TO postgres;
 
 --
 -- TOC entry 222 (class 1259 OID 41589)
--- Name: pagamento_has_forma_pagamento; Type: TABLE; Schema: public; Owner: radames
+-- Name: pagamento_has_forma_pagamento; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.pagamento_has_forma_pagamento (
@@ -125,11 +125,11 @@ CREATE TABLE public.pagamento_has_forma_pagamento (
 );
 
 
-ALTER TABLE public.pagamento_has_forma_pagamento OWNER TO radames;
+ALTER TABLE public.pagamento_has_forma_pagamento OWNER TO postgres;
 
 --
 -- TOC entry 217 (class 1259 OID 41541)
--- Name: pedido; Type: TABLE; Schema: public; Owner: radames
+-- Name: pedido; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.pedido (
@@ -140,11 +140,11 @@ CREATE TABLE public.pedido (
 );
 
 
-ALTER TABLE public.pedido OWNER TO radames;
+ALTER TABLE public.pedido OWNER TO postgres;
 
 --
 -- TOC entry 221 (class 1259 OID 41574)
--- Name: pedido_has_produto; Type: TABLE; Schema: public; Owner: radames
+-- Name: pedido_has_produto; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.pedido_has_produto (
@@ -155,11 +155,11 @@ CREATE TABLE public.pedido_has_produto (
 );
 
 
-ALTER TABLE public.pedido_has_produto OWNER TO radames;
+ALTER TABLE public.pedido_has_produto OWNER TO postgres;
 
 --
 -- TOC entry 216 (class 1259 OID 41540)
--- Name: pedido_id_pedido_seq; Type: SEQUENCE; Schema: public; Owner: radames
+-- Name: pedido_id_pedido_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE public.pedido_id_pedido_seq
@@ -171,12 +171,12 @@ CREATE SEQUENCE public.pedido_id_pedido_seq
     CACHE 1;
 
 
-ALTER TABLE public.pedido_id_pedido_seq OWNER TO radames;
+ALTER TABLE public.pedido_id_pedido_seq OWNER TO postgres;
 
 --
 -- TOC entry 3453 (class 0 OID 0)
 -- Dependencies: 216
--- Name: pedido_id_pedido_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: radames
+-- Name: pedido_id_pedido_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE public.pedido_id_pedido_seq OWNED BY public.pedido.id_pedido;
@@ -184,7 +184,7 @@ ALTER SEQUENCE public.pedido_id_pedido_seq OWNED BY public.pedido.id_pedido;
 
 --
 -- TOC entry 209 (class 1259 OID 41496)
--- Name: pessoa; Type: TABLE; Schema: public; Owner: radames
+-- Name: pessoa; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.pessoa (
@@ -197,11 +197,11 @@ CREATE TABLE public.pessoa (
 );
 
 
-ALTER TABLE public.pessoa OWNER TO radames;
+ALTER TABLE public.pessoa OWNER TO postgres;
 
 --
 -- TOC entry 215 (class 1259 OID 41534)
--- Name: produto; Type: TABLE; Schema: public; Owner: radames
+-- Name: produto; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.produto (
@@ -213,11 +213,11 @@ CREATE TABLE public.produto (
 );
 
 
-ALTER TABLE public.produto OWNER TO radames;
+ALTER TABLE public.produto OWNER TO postgres;
 
 --
 -- TOC entry 214 (class 1259 OID 41533)
--- Name: produto_id_produto_seq; Type: SEQUENCE; Schema: public; Owner: radames
+-- Name: produto_id_produto_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE public.produto_id_produto_seq
@@ -229,12 +229,12 @@ CREATE SEQUENCE public.produto_id_produto_seq
     CACHE 1;
 
 
-ALTER TABLE public.produto_id_produto_seq OWNER TO radames;
+ALTER TABLE public.produto_id_produto_seq OWNER TO postgres;
 
 --
 -- TOC entry 3454 (class 0 OID 0)
 -- Dependencies: 214
--- Name: produto_id_produto_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: radames
+-- Name: produto_id_produto_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE public.produto_id_produto_seq OWNED BY public.produto.id_produto;
@@ -242,7 +242,7 @@ ALTER SEQUENCE public.produto_id_produto_seq OWNED BY public.produto.id_produto;
 
 --
 -- TOC entry 223 (class 1259 OID 108702)
--- Name: unidade_medida; Type: TABLE; Schema: public; Owner: radames
+-- Name: unidade_medida; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.unidade_medida (
@@ -251,11 +251,11 @@ CREATE TABLE public.unidade_medida (
 );
 
 
-ALTER TABLE public.unidade_medida OWNER TO radames;
+ALTER TABLE public.unidade_medida OWNER TO postgres;
 
 --
 -- TOC entry 3252 (class 2604 OID 41505)
--- Name: cargo id_cargo; Type: DEFAULT; Schema: public; Owner: radames
+-- Name: cargo id_cargo; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.cargo ALTER COLUMN id_cargo SET DEFAULT nextval('public.cargo_id_cargo_seq'::regclass);
@@ -263,7 +263,7 @@ ALTER TABLE ONLY public.cargo ALTER COLUMN id_cargo SET DEFAULT nextval('public.
 
 --
 -- TOC entry 3255 (class 2604 OID 41571)
--- Name: forma_pagamento id_forma_pagamento; Type: DEFAULT; Schema: public; Owner: radames
+-- Name: forma_pagamento id_forma_pagamento; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.forma_pagamento ALTER COLUMN id_forma_pagamento SET DEFAULT nextval('public.forma_pagamento_id_forma_pagamento_seq'::regclass);
@@ -271,7 +271,7 @@ ALTER TABLE ONLY public.forma_pagamento ALTER COLUMN id_forma_pagamento SET DEFA
 
 --
 -- TOC entry 3254 (class 2604 OID 66561)
--- Name: pedido id_pedido; Type: DEFAULT; Schema: public; Owner: radames
+-- Name: pedido id_pedido; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.pedido ALTER COLUMN id_pedido SET DEFAULT nextval('public.pedido_id_pedido_seq'::regclass);
@@ -279,7 +279,7 @@ ALTER TABLE ONLY public.pedido ALTER COLUMN id_pedido SET DEFAULT nextval('publi
 
 --
 -- TOC entry 3253 (class 2604 OID 41537)
--- Name: produto id_produto; Type: DEFAULT; Schema: public; Owner: radames
+-- Name: produto id_produto; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.produto ALTER COLUMN id_produto SET DEFAULT nextval('public.produto_id_produto_seq'::regclass);
@@ -288,7 +288,7 @@ ALTER TABLE ONLY public.produto ALTER COLUMN id_produto SET DEFAULT nextval('pub
 --
 -- TOC entry 3432 (class 0 OID 41502)
 -- Dependencies: 211
--- Data for Name: cargo; Type: TABLE DATA; Schema: public; Owner: radames
+-- Data for Name: cargo; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 INSERT INTO public.cargo VALUES (3, 'Caixa');
@@ -308,7 +308,7 @@ INSERT INTO public.cargo VALUES (2, 'Gerente');
 --
 -- TOC entry 3434 (class 0 OID 41523)
 -- Dependencies: 213
--- Data for Name: cliente; Type: TABLE DATA; Schema: public; Owner: radames
+-- Data for Name: cliente; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 INSERT INTO public.cliente VALUES ('22222222222', 3200, '2024-01-02');
@@ -328,7 +328,7 @@ INSERT INTO public.cliente VALUES ('2', 22222, '2025-10-15');
 --
 -- TOC entry 3441 (class 0 OID 41568)
 -- Dependencies: 220
--- Data for Name: forma_pagamento; Type: TABLE DATA; Schema: public; Owner: radames
+-- Data for Name: forma_pagamento; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 INSERT INTO public.forma_pagamento VALUES (1, 'Dinheiro');
@@ -346,7 +346,7 @@ INSERT INTO public.forma_pagamento VALUES (10, 'Gift Card');
 --
 -- TOC entry 3433 (class 0 OID 41508)
 -- Dependencies: 212
--- Data for Name: funcionario; Type: TABLE DATA; Schema: public; Owner: radames
+-- Data for Name: funcionario; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 INSERT INTO public.funcionario VALUES ('22222222222', 3000, 2, 10);
@@ -365,7 +365,7 @@ INSERT INTO public.funcionario VALUES ('1', 1111, 2, 1);
 --
 -- TOC entry 3439 (class 0 OID 41557)
 -- Dependencies: 218
--- Data for Name: pagamento; Type: TABLE DATA; Schema: public; Owner: radames
+-- Data for Name: pagamento; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 INSERT INTO public.pagamento VALUES (1, '2024-02-01 10:00:00', 50);
@@ -387,7 +387,7 @@ INSERT INTO public.pagamento VALUES (72, '2025-12-13 09:15:50.149', 13.35);
 --
 -- TOC entry 3443 (class 0 OID 41589)
 -- Dependencies: 222
--- Data for Name: pagamento_has_forma_pagamento; Type: TABLE DATA; Schema: public; Owner: radames
+-- Data for Name: pagamento_has_forma_pagamento; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 INSERT INTO public.pagamento_has_forma_pagamento VALUES (1, 1, 20);
@@ -407,7 +407,7 @@ INSERT INTO public.pagamento_has_forma_pagamento VALUES (72, 4, 3);
 --
 -- TOC entry 3438 (class 0 OID 41541)
 -- Dependencies: 217
--- Data for Name: pedido; Type: TABLE DATA; Schema: public; Owner: radames
+-- Data for Name: pedido; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 INSERT INTO public.pedido VALUES (3, '2024-02-03', '55555555555', '66666666666');
@@ -486,7 +486,7 @@ INSERT INTO public.pedido VALUES (72, '2025-12-13', '1', '00000000000');
 --
 -- TOC entry 3442 (class 0 OID 41574)
 -- Dependencies: 221
--- Data for Name: pedido_has_produto; Type: TABLE DATA; Schema: public; Owner: radames
+-- Data for Name: pedido_has_produto; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 INSERT INTO public.pedido_has_produto VALUES (1, 1, 2, 5.5);
@@ -600,7 +600,7 @@ INSERT INTO public.pedido_has_produto VALUES (5, 72, 5, 70);
 --
 -- TOC entry 3430 (class 0 OID 41496)
 -- Dependencies: 209
--- Data for Name: pessoa; Type: TABLE DATA; Schema: public; Owner: radames
+-- Data for Name: pessoa; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 INSERT INTO public.pessoa VALUES ('10101010101', 'Juliana Dias ssss', '1989-10-25', 'lins, 352 ssss', '1111', 'juliana@email.comm');
@@ -621,7 +621,7 @@ INSERT INTO public.pessoa VALUES ('2', 'dois', '2025-10-07', 'Rua das Magnólias
 --
 -- TOC entry 3436 (class 0 OID 41534)
 -- Dependencies: 215
--- Data for Name: produto; Type: TABLE DATA; Schema: public; Owner: radames
+-- Data for Name: produto; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 INSERT INTO public.produto VALUES (8, 'Pão de Mel', 40, 60, NULL);
@@ -640,7 +640,7 @@ INSERT INTO public.produto VALUES (50, 'cinquenta', 50, 50, NULL);
 --
 -- TOC entry 3444 (class 0 OID 108702)
 -- Dependencies: 223
--- Data for Name: unidade_medida; Type: TABLE DATA; Schema: public; Owner: radames
+-- Data for Name: unidade_medida; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 
@@ -648,7 +648,7 @@ INSERT INTO public.produto VALUES (50, 'cinquenta', 50, 50, NULL);
 --
 -- TOC entry 3455 (class 0 OID 0)
 -- Dependencies: 210
--- Name: cargo_id_cargo_seq; Type: SEQUENCE SET; Schema: public; Owner: radames
+-- Name: cargo_id_cargo_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
 SELECT pg_catalog.setval('public.cargo_id_cargo_seq', 10, true);
@@ -657,7 +657,7 @@ SELECT pg_catalog.setval('public.cargo_id_cargo_seq', 10, true);
 --
 -- TOC entry 3456 (class 0 OID 0)
 -- Dependencies: 219
--- Name: forma_pagamento_id_forma_pagamento_seq; Type: SEQUENCE SET; Schema: public; Owner: radames
+-- Name: forma_pagamento_id_forma_pagamento_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
 SELECT pg_catalog.setval('public.forma_pagamento_id_forma_pagamento_seq', 10, true);
@@ -666,7 +666,7 @@ SELECT pg_catalog.setval('public.forma_pagamento_id_forma_pagamento_seq', 10, tr
 --
 -- TOC entry 3457 (class 0 OID 0)
 -- Dependencies: 216
--- Name: pedido_id_pedido_seq; Type: SEQUENCE SET; Schema: public; Owner: radames
+-- Name: pedido_id_pedido_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
 SELECT pg_catalog.setval('public.pedido_id_pedido_seq', 72, true);
@@ -675,7 +675,7 @@ SELECT pg_catalog.setval('public.pedido_id_pedido_seq', 72, true);
 --
 -- TOC entry 3458 (class 0 OID 0)
 -- Dependencies: 214
--- Name: produto_id_produto_seq; Type: SEQUENCE SET; Schema: public; Owner: radames
+-- Name: produto_id_produto_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
 SELECT pg_catalog.setval('public.produto_id_produto_seq', 10, true);
@@ -683,7 +683,7 @@ SELECT pg_catalog.setval('public.produto_id_produto_seq', 10, true);
 
 --
 -- TOC entry 3261 (class 2606 OID 41507)
--- Name: cargo cargo_pkey; Type: CONSTRAINT; Schema: public; Owner: radames
+-- Name: cargo cargo_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.cargo
@@ -692,7 +692,7 @@ ALTER TABLE ONLY public.cargo
 
 --
 -- TOC entry 3265 (class 2606 OID 41527)
--- Name: cliente cliente_pkey; Type: CONSTRAINT; Schema: public; Owner: radames
+-- Name: cliente cliente_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.cliente
@@ -701,7 +701,7 @@ ALTER TABLE ONLY public.cliente
 
 --
 -- TOC entry 3273 (class 2606 OID 41573)
--- Name: forma_pagamento forma_pagamento_pkey; Type: CONSTRAINT; Schema: public; Owner: radames
+-- Name: forma_pagamento forma_pagamento_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.forma_pagamento
@@ -710,7 +710,7 @@ ALTER TABLE ONLY public.forma_pagamento
 
 --
 -- TOC entry 3263 (class 2606 OID 41512)
--- Name: funcionario funcionario_pkey; Type: CONSTRAINT; Schema: public; Owner: radames
+-- Name: funcionario funcionario_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.funcionario
@@ -719,7 +719,7 @@ ALTER TABLE ONLY public.funcionario
 
 --
 -- TOC entry 3277 (class 2606 OID 41593)
--- Name: pagamento_has_forma_pagamento pagamento_has_forma_pagamento_pkey; Type: CONSTRAINT; Schema: public; Owner: radames
+-- Name: pagamento_has_forma_pagamento pagamento_has_forma_pagamento_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.pagamento_has_forma_pagamento
@@ -728,7 +728,7 @@ ALTER TABLE ONLY public.pagamento_has_forma_pagamento
 
 --
 -- TOC entry 3271 (class 2606 OID 41561)
--- Name: pagamento pagamento_pkey; Type: CONSTRAINT; Schema: public; Owner: radames
+-- Name: pagamento pagamento_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.pagamento
@@ -737,7 +737,7 @@ ALTER TABLE ONLY public.pagamento
 
 --
 -- TOC entry 3275 (class 2606 OID 41578)
--- Name: pedido_has_produto pedido_has_produto_pkey; Type: CONSTRAINT; Schema: public; Owner: radames
+-- Name: pedido_has_produto pedido_has_produto_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.pedido_has_produto
@@ -746,7 +746,7 @@ ALTER TABLE ONLY public.pedido_has_produto
 
 --
 -- TOC entry 3269 (class 2606 OID 41546)
--- Name: pedido pedido_pkey; Type: CONSTRAINT; Schema: public; Owner: radames
+-- Name: pedido pedido_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.pedido
@@ -755,7 +755,7 @@ ALTER TABLE ONLY public.pedido
 
 --
 -- TOC entry 3257 (class 2606 OID 41500)
--- Name: pessoa pessoa_pkey; Type: CONSTRAINT; Schema: public; Owner: radames
+-- Name: pessoa pessoa_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.pessoa
@@ -764,7 +764,7 @@ ALTER TABLE ONLY public.pessoa
 
 --
 -- TOC entry 3259 (class 2606 OID 42000)
--- Name: pessoa pessoa_unique; Type: CONSTRAINT; Schema: public; Owner: radames
+-- Name: pessoa pessoa_unique; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.pessoa
@@ -773,7 +773,7 @@ ALTER TABLE ONLY public.pessoa
 
 --
 -- TOC entry 3267 (class 2606 OID 41539)
--- Name: produto produto_pkey; Type: CONSTRAINT; Schema: public; Owner: radames
+-- Name: produto produto_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.produto
@@ -782,7 +782,7 @@ ALTER TABLE ONLY public.produto
 
 --
 -- TOC entry 3279 (class 2606 OID 108706)
--- Name: unidade_medida unidade_medida_pk; Type: CONSTRAINT; Schema: public; Owner: radames
+-- Name: unidade_medida unidade_medida_pk; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.unidade_medida
@@ -791,7 +791,7 @@ ALTER TABLE ONLY public.unidade_medida
 
 --
 -- TOC entry 3282 (class 2606 OID 41528)
--- Name: cliente cliente_pessoa_cpf_pessoa_fkey; Type: FK CONSTRAINT; Schema: public; Owner: radames
+-- Name: cliente cliente_pessoa_cpf_pessoa_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.cliente
@@ -800,7 +800,7 @@ ALTER TABLE ONLY public.cliente
 
 --
 -- TOC entry 3281 (class 2606 OID 41518)
--- Name: funcionario funcionario_cargo_id_cargo_fkey; Type: FK CONSTRAINT; Schema: public; Owner: radames
+-- Name: funcionario funcionario_cargo_id_cargo_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.funcionario
@@ -809,7 +809,7 @@ ALTER TABLE ONLY public.funcionario
 
 --
 -- TOC entry 3280 (class 2606 OID 41513)
--- Name: funcionario funcionario_pessoa_cpf_pessoa_fkey; Type: FK CONSTRAINT; Schema: public; Owner: radames
+-- Name: funcionario funcionario_pessoa_cpf_pessoa_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.funcionario
@@ -818,7 +818,7 @@ ALTER TABLE ONLY public.funcionario
 
 --
 -- TOC entry 3290 (class 2606 OID 41599)
--- Name: pagamento_has_forma_pagamento pagamento_has_forma_pagamento_forma_pagamento_id_forma_pag_fkey; Type: FK CONSTRAINT; Schema: public; Owner: radames
+-- Name: pagamento_has_forma_pagamento pagamento_has_forma_pagamento_forma_pagamento_id_forma_pag_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.pagamento_has_forma_pagamento
@@ -827,7 +827,7 @@ ALTER TABLE ONLY public.pagamento_has_forma_pagamento
 
 --
 -- TOC entry 3289 (class 2606 OID 41594)
--- Name: pagamento_has_forma_pagamento pagamento_has_forma_pagamento_pagamento_id_pedido_fkey; Type: FK CONSTRAINT; Schema: public; Owner: radames
+-- Name: pagamento_has_forma_pagamento pagamento_has_forma_pagamento_pagamento_id_pedido_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.pagamento_has_forma_pagamento
@@ -836,7 +836,7 @@ ALTER TABLE ONLY public.pagamento_has_forma_pagamento
 
 --
 -- TOC entry 3286 (class 2606 OID 41562)
--- Name: pagamento pagamento_pedido_id_pedido_fkey; Type: FK CONSTRAINT; Schema: public; Owner: radames
+-- Name: pagamento pagamento_pedido_id_pedido_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.pagamento
@@ -845,7 +845,7 @@ ALTER TABLE ONLY public.pagamento
 
 --
 -- TOC entry 3284 (class 2606 OID 41547)
--- Name: pedido pedido_cliente_pessoa_cpf_pessoa_fkey; Type: FK CONSTRAINT; Schema: public; Owner: radames
+-- Name: pedido pedido_cliente_pessoa_cpf_pessoa_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.pedido
@@ -854,7 +854,7 @@ ALTER TABLE ONLY public.pedido
 
 --
 -- TOC entry 3285 (class 2606 OID 41552)
--- Name: pedido pedido_funcionario_pessoa_cpf_pessoa_fkey; Type: FK CONSTRAINT; Schema: public; Owner: radames
+-- Name: pedido pedido_funcionario_pessoa_cpf_pessoa_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.pedido
@@ -863,7 +863,7 @@ ALTER TABLE ONLY public.pedido
 
 --
 -- TOC entry 3288 (class 2606 OID 41584)
--- Name: pedido_has_produto pedido_has_produto_pedido_id_pedido_fkey; Type: FK CONSTRAINT; Schema: public; Owner: radames
+-- Name: pedido_has_produto pedido_has_produto_pedido_id_pedido_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.pedido_has_produto
@@ -872,7 +872,7 @@ ALTER TABLE ONLY public.pedido_has_produto
 
 --
 -- TOC entry 3287 (class 2606 OID 41579)
--- Name: pedido_has_produto pedido_has_produto_produto_id_produto_fkey; Type: FK CONSTRAINT; Schema: public; Owner: radames
+-- Name: pedido_has_produto pedido_has_produto_produto_id_produto_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.pedido_has_produto
@@ -881,7 +881,7 @@ ALTER TABLE ONLY public.pedido_has_produto
 
 --
 -- TOC entry 3283 (class 2606 OID 108707)
--- Name: produto produto_unidade_medida_fk; Type: FK CONSTRAINT; Schema: public; Owner: radames
+-- Name: produto produto_unidade_medida_fk; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.produto
