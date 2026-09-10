@@ -15,13 +15,16 @@ async function procurePorChavePrimaria(chave) {
 }
 
 async function procure() {
-    const id_forma_pagamento = document.getElementById("inputId_forma_pagamento").value.trim().toUpperCase();
+    const id_forma_pagamento = document.getElementById("inputId_forma_pagamento").value.trim();
+
+    if (!id_forma_pagamento) {
+        mostrarAviso("Informe um ID válido para procurar.");
+        return;
     }
 
-    document.getElementById("inputId_forma_pagamento").value = id_forma_pagamento;
     formaPagamento = await procurePorChavePrimaria(id_forma_pagamento);
     oQueEstaFazendo = '';
-    
+
     if (formaPagamento) {
         mostrarDadosForma(formaPagamento);
         visibilidadeDosBotoes('inline', 'none', 'inline', 'inline', 'none');
@@ -29,15 +32,17 @@ async function procure() {
     } else {
         limparAtributos();
         visibilidadeDosBotoes('inline', 'inline', 'none', 'none', 'none');
-        mostrarAviso("Não achou no banco, pode inserir");
+        mostrarAviso("Não achou no banco. O ID é gerado automaticamente ao inserir uma nova forma.");
     }
-
+}
 
 function inserir() {
+    // ID é gerado pelo banco: não faz sentido usar o ID digitado na busca
+    document.getElementById("inputId_forma_pagamento").value = "";
     bloquearAtributos(false);
     visibilidadeDosBotoes('none', 'none', 'none', 'none', 'inline');
     oQueEstaFazendo = 'inserindo';
-    mostrarAviso("INSERINDO - Digite o nome da forma e clique em salvar");
+    mostrarAviso("INSERINDO - Digite o nome da forma e clique em salvar (o ID será gerado automaticamente)");
 }
 
 function alterar() {
@@ -55,18 +60,19 @@ function excluir() {
 }
 
 async function salvar() {
-    const id_forma_pagamento = document.getElementById("inputId_forma_pagamento").value.trim().toUpperCase();
+    const id_forma_pagamento = document.getElementById("inputId_forma_pagamento").value.trim();
     const nome_forma_pagamento = document.getElementById("inputNome_forma_pagamento").value;
-
-    const dadosForma = { id_forma_pagamento, nome_forma_pagamento };
 
     try {
         if (oQueEstaFazendo === 'inserindo') {
+            // Não envia ID: o banco gera automaticamente
+            const dadosForma = { nome_forma_pagamento };
             const resp = await fetch(`${URL_API}/forma_pagamento`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dadosForma) });
             const data = await resp.json();
             if (!data.sucesso) return mostrarAviso(data.mensagem);
-            mostrarAviso("Inserido no Banco de Dados com sucesso!");
+            mostrarAviso(`Inserido no Banco de Dados com sucesso! ID gerado: ${data.forma.id_forma_pagamento}`);
         } else if (oQueEstaFazendo === 'alterando') {
+            const dadosForma = { nome_forma_pagamento };
             const resp = await fetch(`${URL_API}/forma_pagamento/${id_forma_pagamento}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dadosForma) });
             const data = await resp.json();
             if (!data.sucesso) return mostrarAviso(data.mensagem);
@@ -94,7 +100,7 @@ async function listar() {
     try {
         const resposta = await fetch(`${URL_API}/forma_pagamento/listar`);
         const data = await resposta.json();
-        
+
         if (data.sucesso) {
             let texto = "";
             for (let linha of data.formas) {

@@ -7,14 +7,15 @@
 
 /* --- Variáveis de Cores --- */
 :root {
-    --cor-primaria: #2c3e50;
-    --cor-secundaria: #3498db;
-    --cor-secundaria-hover: #2980b9;
-    --cor-fundo: #f8f9fa;
-    --cor-texto: #333333;
-    --cor-aviso: #e74c3c;
-    --cor-borda: #ced4da;
+    --cor-primaria: #d6336c;       /* rosa pink vibrante */
+    --cor-secundaria: #ff8fab;     /* rosa chiclete */
+    --cor-secundaria-hover: #f4678e;
+    --cor-fundo: #fff0f5;          /* lavanda blush bem clarinho */
+    --cor-texto: #5c3a44;
+    --cor-aviso: #e64878;
+    --cor-borda: #ffd1dc;
     --cor-branco: #ffffff;
+    --cor-destaque: #ffc2d1;       /* rosa bebê pra detalhes */
 }
 
 /* --- Estrutura Geral --- */
@@ -29,21 +30,26 @@ body {
 
 /* --- Header Semântico --- */
 header {
-    background-color: var(--cor-primaria);
+    background: linear-gradient(135deg, var(--cor-primaria), #ff6f9c);
     color: var(--cor-branco);
     padding: 2rem 1rem;
     text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(214, 51, 108, 0.25);
+    border-bottom: 3px solid var(--cor-destaque);
 }
 
 header h1 {
     margin-bottom: 0.5rem;
     font-size: 2.2rem;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
 header p {
     font-size: 1rem;
-    opacity: 0.8;
+    opacity: 0.95;
+    font-style: italic;
 }
 
 /* --- Main (Conteúdo Central) --- */
@@ -62,9 +68,10 @@ main.container-master {
     gap: 2rem;
     background-color: var(--cor-branco);
     padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border-radius: 14px;
+    box-shadow: 0 3px 14px rgba(214, 51, 108, 0.10);
     margin-bottom: 2rem;
+    border: 1px solid var(--cor-borda);
 }
 
 /* --- Section Esquerda (Formulário) --- */
@@ -78,6 +85,7 @@ main.container-master {
 .form-esquerda h2 {
     margin-bottom: 1.5rem;
     font-size: 1.4rem;
+    font-family: 'Georgia', 'Times New Roman', serif;
     color: var(--cor-primaria);
     border-bottom: 2px solid var(--cor-secundaria);
     padding-bottom: 0.5rem;
@@ -88,21 +96,23 @@ main.container-master {
     margin-top: 1rem;
     margin-bottom: 0.3rem;
     font-size: 0.95rem;
+    color: var(--cor-primaria);
 }
 
-.form-esquerda input[type="text"],
-.form-esquerda input[type="number"] {
+.form-esquerda input[type="text"] {
     width: 100%;
     padding: 0.6rem;
     border: 1px solid var(--cor-borda);
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 1rem;
     transition: border-color 0.3s;
+    background-color: #fffafc;
 }
 
 .form-esquerda input:focus {
     outline: none;
     border-color: var(--cor-secundaria);
+    box-shadow: 0 0 0 3px rgba(255, 143, 171, 0.2);
 }
 
 .linha-id {
@@ -122,15 +132,16 @@ input[type="button"] {
     color: var(--cor-branco);
     border: none;
     padding: 0.6rem 1.2rem;
-    border-radius: 4px;
+    border-radius: 20px;
     cursor: pointer;
     font-weight: bold;
     font-size: 0.9rem;
-    transition: background-color 0.3s;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 input[type="button"]:hover {
     background-color: var(--cor-secundaria-hover);
+    transform: translateY(-2px);
 }
 
 .botoes-acao {
@@ -143,10 +154,10 @@ input[type="button"]:hover {
 #divAviso {
     margin-top: 1.5rem;
     padding: 1rem;
-    background-color: #fce4e4;
+    background-color: #ffe3ec;
     color: var(--cor-aviso);
     border-left: 5px solid var(--cor-aviso);
-    border-radius: 4px;
+    border-radius: 6px;
     font-weight: bold;
     font-size: 0.9rem;
 }
@@ -163,12 +174,13 @@ input[type="button"]:hover {
 .form-direita h2 {
     margin-bottom: 0.5rem;
     font-size: 1.4rem;
+    font-family: 'Georgia', 'Times New Roman', serif;
     color: var(--cor-primaria);
 }
 
 .instrucao-imagem {
     font-size: 0.85rem;
-    color: #666;
+    color: #a56374;
     margin-bottom: 1rem;
 }
 
@@ -183,11 +195,11 @@ input[type="button"]:hover {
     height: 350px;
     object-fit: cover;
     border: 3px dashed var(--cor-borda);
-    border-radius: 8px;
+    border-radius: 12px;
     padding: 5px;
     cursor: pointer;
     transition: border-color 0.3s, transform 0.3s;
-    background-color: #eee;
+    background-color: #fff5f8;
 }
 
 .img-container img:hover {
@@ -196,15 +208,17 @@ input[type="button"]:hover {
 }
 
 /* --- Section Listagem --- */
-.lista-produto {
+.lista-unidades {
     background-color: var(--cor-branco);
     padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    border-radius: 14px;
+    box-shadow: 0 3px 14px rgba(214, 51, 108, 0.10);
+    border: 1px solid var(--cor-borda);
 }
 
-.lista-produto h3 {
+.lista-unidades h3 {
     margin-bottom: 1rem;
+    font-family: 'Georgia', 'Times New Roman', serif;
     color: var(--cor-primaria);
     border-bottom: 2px solid var(--cor-secundaria);
     padding-bottom: 0.5rem;
@@ -214,17 +228,18 @@ input[type="button"]:hover {
     font-family: monospace;
     font-size: 1rem;
     line-height: 1.6;
-    color: #555;
+    color: #a56374;
 }
 
 /* --- Footer Semântico --- */
 footer {
-    background-color: var(--cor-primaria);
+    background: linear-gradient(135deg, var(--cor-primaria), #ff6f9c);
     color: var(--cor-branco);
     text-align: center;
     padding: 1.5rem 1rem;
     margin-top: 2rem;
     font-size: 0.9rem;
+    border-top: 3px solid var(--cor-destaque);
 }
 
 /* --- Responsividade --- */
