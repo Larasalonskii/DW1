@@ -4,7 +4,7 @@ let operacao = null;
 
 // Elementos do DOM
 const form = document.getElementById('pessoaForm');
-const searchId = document.getElementById('searchId');
+const searchCpf = document.getElementById('searchCpf');
 const btnBuscar = document.getElementById('btnBuscar');
 const btnIncluir = document.getElementById('btnIncluir');
 const btnAlterar = document.getElementById('btnAlterar');
@@ -54,10 +54,10 @@ function limparFormulario() {
     document.getElementById('checkboxFuncionario').checked = false;
     document.getElementById('salario_funcionario').value = '';
     document.getElementById('cargo_id_cargo').value = '';
-    document.getElementById('porcentagem_comissao_funcionario').value = '';
+    document.getElementById('valor_turno_extra_funcionario').value = '';
 
     document.getElementById('checkboxCliente').checked = false;
-    document.getElementById('renda_cliente').value = '';
+    document.getElementById('frequencia_reservas_cliente').value = '';
     document.getElementById('data_cadastro_cliente').value = '';
 }
 
@@ -99,7 +99,7 @@ async function funcaoEhFuncionario(pessoaId) {
                 ehFuncionario: true,
                 salario_funcionario: data.funcionario.salario_funcionario,
                 cargo_id_cargo: data.funcionario.cargo_id_cargo,
-                porcentagem_comissao_funcionario: data.funcionario.porcentagem_comissao_funcionario
+                valor_turno_extra_funcionario: data.funcionario.valor_turno_extra_funcionario
             };
         }
         return { ehFuncionario: false };
@@ -118,7 +118,7 @@ async function funcaoEhCliente(pessoaId) {
             const clienteObj = data.cliente || data;
             return {
                 ehCliente: true,
-                renda_cliente: clienteObj.renda_cliente,
+                frequencia_reservas_cliente: clienteObj.frequencia_reservas_cliente,
                 data_cadastro_cliente: clienteObj.data_cadastro_cliente
             };
         }
@@ -130,14 +130,14 @@ async function funcaoEhCliente(pessoaId) {
 }
 
 async function buscarPessoa() {
-    const id = searchId.value.trim();
+    const id = searchCpf.value.trim();
     if (!id) {
         mostrarMensagem('Digite um CPF para buscar', 'warning');
         return;
     }
 
     bloquearCampos(false);
-    searchId.focus();
+    searchCpf.focus();
     try {
         const response = await fetch(`${API_BASE_URL}/pessoa/${id}`);
         const data = await response.json();
@@ -148,7 +148,7 @@ async function buscarPessoa() {
             mostrarMensagem('Pessoa encontrada!', 'success');
         } else {
             limparFormulario();
-            searchId.value = id;
+            searchCpf.value = id;
             mostrarBotoes(true, true, false, false, false, false);
             mostrarMensagem('Pessoa não encontrada. Você pode incluir uma nova pessoa.', 'info');
             bloquearCampos(false);
@@ -161,7 +161,7 @@ async function buscarPessoa() {
 
 async function preencherFormulario(pessoa) {
     currentPersonId = pessoa.cpf_pessoa;
-    searchId.value = pessoa.cpf_pessoa;
+    searchCpf.value = pessoa.cpf_pessoa;
     document.getElementById('nome_pessoa').value = pessoa.nome_pessoa || '';
 
     if (pessoa.data_nascimento_pessoa) {
@@ -172,7 +172,7 @@ async function preencherFormulario(pessoa) {
         document.getElementById('data_nascimento').value = '';
     }
     document.getElementById('endereco_pessoa').value = pessoa.endereco_pessoa || '';
-    document.getElementById('senha_pessoa').value = pessoa.senha_pessoa || '';
+    document.getElementById('telefone_pessoa').value = pessoa.telefone_pessoa || '';
     document.getElementById('email_pessoa').value = pessoa.email_pessoa || '';
 
     // Verifica funcionário
@@ -181,32 +181,32 @@ async function preencherFormulario(pessoa) {
         document.getElementById('checkboxFuncionario').checked = true;
         document.getElementById('cargo_id_cargo').value = ehFunc.cargo_id_cargo;
         document.getElementById('salario_funcionario').value = ehFunc.salario_funcionario;
-        document.getElementById('porcentagem_comissao_funcionario').value = ehFunc.porcentagem_comissao_funcionario;
+        document.getElementById('valor_turno_extra_funcionario').value = ehFunc.valor_turno_extra_funcionario;
     } else {
         document.getElementById('checkboxFuncionario').checked = false;
         document.getElementById('cargo_id_cargo').value = '';
         document.getElementById('salario_funcionario').value = '';
-        document.getElementById('porcentagem_comissao_funcionario').value = '';
+        document.getElementById('valor_turno_extra_funcionario').value = '';
     }
 
     // Verifica cliente
     const ehCli = await funcaoEhCliente(currentPersonId);
     if (ehCli.ehCliente) {
         document.getElementById('checkboxCliente').checked = true;
-        document.getElementById('renda_cliente').value = ehCli.renda_cliente;
+        document.getElementById('frequencia_reservas_cliente').value = ehCli.frequencia_reservas_cliente;
         document.getElementById('data_cadastro_cliente').value = converterDataParaFormatoYYYYMMDD(ehCli.data_cadastro_cliente);
     } else {
         document.getElementById('checkboxCliente').checked = false;
-        document.getElementById('renda_cliente').value = '';
+        document.getElementById('frequencia_reservas_cliente').value = '';
         document.getElementById('data_cadastro_cliente').value = '';
     }
 }
 
 async function incluirPessoa() {
     mostrarMensagem('Digite os dados!', 'success');
-    currentPersonId = searchId.value;
+    currentPersonId = searchCpf.value;
     limparFormulario();
-    searchId.value = currentPersonId;
+    searchCpf.value = currentPersonId;
     bloquearCampos(true);
     mostrarBotoes(false, false, false, false, true, true);
     document.getElementById('nome_pessoa').focus();
@@ -223,8 +223,8 @@ async function alterarPessoa() {
 
 async function excluirPessoa() {
     mostrarMensagem('Excluindo pessoa...', 'info');
-    currentPersonId = searchId.value;
-    searchId.disabled = true;
+    currentPersonId = searchCpf.value;
+    searchCpf.disabled = true;
     bloquearCampos(false);
     mostrarBotoes(false, false, false, false, true, true);
     operacao = 'excluir';
@@ -233,11 +233,11 @@ async function excluirPessoa() {
 async function salvarOperacao() {
     const formData = new FormData(form);
     const pessoa = {
-        cpf_pessoa: searchId.value.trim(),
+        cpf_pessoa: searchCpf.value.trim(),
         nome_pessoa: formData.get('nome_pessoa'),
         data_nascimento_pessoa: converterDataParaISO(formData.get('data_nascimento')) || null,
         endereco_pessoa: formData.get('endereco_pessoa'),
-        senha_pessoa: formData.get('senha_pessoa'),
+        telefone_pessoa: formData.get('telefone_pessoa'),
         email_pessoa: formData.get('email_pessoa')
     };
 
@@ -247,7 +247,7 @@ async function salvarOperacao() {
             pessoa_cpf_pessoa: pessoa.cpf_pessoa,
             salario_funcionario: document.getElementById('salario_funcionario').value,
             cargo_id_cargo: parseInt(document.getElementById('cargo_id_cargo').value, 10),
-            porcentagem_comissao_funcionario: document.getElementById('porcentagem_comissao_funcionario').value
+            valor_turno_extra_funcionario: document.getElementById('valor_turno_extra_funcionario').value
         };
     }
     const caminhoFunc = `${API_BASE_URL}/funcionario/${currentPersonId}`;
@@ -256,7 +256,7 @@ async function salvarOperacao() {
     if (document.getElementById('checkboxCliente').checked) {
         cliente = {
             pessoa_cpf_pessoa: pessoa.cpf_pessoa,
-            renda_cliente: document.getElementById('renda_cliente').value,
+            frequencia_reservas_cliente: document.getElementById('frequencia_reservas_cliente').value,
             data_cadastro_cliente: document.getElementById('data_cadastro_cliente').value || null
         };
     }
@@ -399,7 +399,7 @@ async function salvarOperacao() {
     } finally {
         mostrarBotoes(true, false, false, false, false, false);
         bloquearCampos(false);
-        document.getElementById('searchId').focus();
+        searchCpf.focus();
     }
 }
 
@@ -407,7 +407,7 @@ function cancelarOperacao() {
     limparFormulario();
     mostrarBotoes(true, false, false, false, false, false);
     bloquearCampos(false);
-    document.getElementById('searchId').focus();
+    searchCpf.focus();
     mostrarMensagem('Operação cancelada', 'info');
 }
 
@@ -434,14 +434,14 @@ function renderizarTabelaPessoas(pessoas) {
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>
-                <button class="btn-id" onclick="selecionarPessoa(${pessoa.cpf_pessoa})">
+                <button class="btn-id" onclick="selecionarPessoa('${pessoa.cpf_pessoa}')">
                     ${pessoa.cpf_pessoa}
                 </button>
             </td>
             <td>${pessoa.nome_pessoa}</td>
             <td>${formatarData(pessoa.data_nascimento_pessoa)}</td>                 
             <td>${pessoa.endereco_pessoa}</td>
-            <td>${pessoa.senha_pessoa}</td>
+            <td>${pessoa.telefone_pessoa || ''}</td>
             <td>${pessoa.email_pessoa}</td>
         `;
         pessoasTableBody.appendChild(row);
@@ -449,7 +449,7 @@ function renderizarTabelaPessoas(pessoas) {
 }
 
 async function selecionarPessoa(id) {
-    searchId.value = id;
+    searchCpf.value = id;
     await buscarPessoa();
 }
 
