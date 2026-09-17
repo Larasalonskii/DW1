@@ -3,41 +3,41 @@ const fs = require('fs');
 const path = require('path');
 const sharp = require('sharp');
 
-// Listar todos os quartos
-exports.listarQuartos = async (req, res) => {
+// Listar todos os produtos
+exports.listarProdutos = async (req, res) => {
     try {
-        const result = await query('SELECT * FROM public.quarto ORDER BY id_quarto');
-        res.json({ sucesso: true, quartos: result.rows });
+        const result = await query('SELECT * FROM public.produto ORDER BY id_produto');
+        res.json({ sucesso: true, produtos: result.rows });
     } catch (error) {
-        console.error('Erro ao listar quartos:', error);
-        res.status(500).json({ sucesso: false, mensagem: 'Erro ao listar quartos.' });
+        console.error('Erro ao listar produtos:', error);
+        res.status(500).json({ sucesso: false, mensagem: 'Erro ao listar produtos.' });
     }
 };
 
-// Obter quarto por ID
-exports.obterQuarto = async (req, res) => {
+// Obter produto por ID
+exports.obterProduto = async (req, res) => {
     try {
         const id = parseInt(req.params.id, 10);
         if (isNaN(id)) {
             return res.status(400).json({ sucesso: false, mensagem: 'ID inválido.' });
         }
 
-        const result = await query('SELECT * FROM public.quarto WHERE id_quarto = $1', [id]);
+        const result = await query('SELECT * FROM public.produto WHERE id_produto = $1', [id]);
         if (result.rows.length === 0) {
-            return res.status(404).json({ sucesso: false, mensagem: 'Quarto não encontrado.' });
+            return res.status(404).json({ sucesso: false, mensagem: 'Produto não encontrado.' });
         }
 
-        res.json({ sucesso: true, quarto: result.rows[0] });
+        res.json({ sucesso: true, produto: result.rows[0] });
     } catch (error) {
-        console.error('Erro ao obter quarto:', error);
+        console.error('Erro ao obter produto:', error);
         res.status(500).json({ sucesso: false, mensagem: 'Erro interno do servidor.' });
     }
 };
 
-// Criar quarto
-exports.criarQuarto = async (req, res) => {
+// Criar produto
+exports.criarProduto = async (req, res) => {
     try {
-        const { id_quarto, nome_produto, id_unidade_medida, quantidade_estoque_produto, preco_unitario_produto } = req.body;
+        const { id_produto, nome_produto, id_unidade_medida, quantidade_estoque_produto, preco_unitario_produto } = req.body;
 
         if (!nome_produto) {
             return res.status(400).json({ sucesso: false, mensagem: 'O nome do produto é obrigatório.' });

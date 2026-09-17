@@ -10,8 +10,6 @@ const { query } = require('./database');
 const produtoRoutes = require('./routes/produtoRoutes');
 const unidadeMedidaRoutes = require('./routes/unidadeMedidaRoutes');
 const cargoRoutes = require('./routes/cargoRoutes');
-const formaPagamentoRoutes = require('./routes/formaPagamentoRoutes');
-const pessoaRoutes = require('./routes/pessoaRoutes');
 
 const app = express();
 
@@ -24,9 +22,21 @@ app.use('/imagens', express.static(path.join(__dirname, '../imagens')));
 // Definir Rotas
 app.use('/produto', produtoRoutes);
 app.use('/unidade_medida', unidadeMedidaRoutes);
-app.use('/forma_pagamento', formaPagamentoRoutes);
+
+
+//clienteRoutes tem que vir antes de pessoaRoutes
+const clienteRoutes = require('./routes/clienteRoutes');
+app.use('/cliente', clienteRoutes);
+
+//funcionarioRoutes tem que vir antes de pessoaRoutes
+const funcionarioRoutes = require('./routes/funcionarioRoutes');
+app.use('/funcionario', funcionarioRoutes);
+
+const pessoaRoutes = require('./routes/pessoaRoutes');
+app.use('/pessoa', pessoaRoutes);
+
+
 app.use('/cargo', cargoRoutes);
-app.use('pessoa', pessoaRoutes)
 
 const PORT = process.env.PORT || 3001;
 
