@@ -1,0 +1,260 @@
+/* --- Reset Básico --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* --- Variáveis de Cores --- */
+:root {
+    --cor-primaria: #d6336c;       /* rosa pink vibrante */
+    --cor-secundaria: #ff8fab;     /* rosa chiclete */
+    --cor-secundaria-hover: #f4678e;
+    --cor-fundo: #fff0f5;          /* lavanda blush bem clarinho */
+    --cor-texto: #5c3a44;
+    --cor-aviso: #e64878;
+    --cor-borda: #ffd1dc;
+    --cor-branco: #ffffff;
+    --cor-destaque: #ffc2d1;       /* rosa bebê pra detalhes */
+}
+
+/* --- Estrutura Geral --- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* --- Header Semântico --- */
+header {
+    background: linear-gradient(135deg, var(--cor-primaria), #ff6f9c);
+    color: var(--cor-branco);
+    padding: 2rem 1rem;
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(214, 51, 108, 0.25);
+    border-bottom: 3px solid var(--cor-destaque);
+}
+
+header h1 {
+    margin-bottom: 0.5rem;
+    font-size: 2.2rem;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+header p {
+    font-size: 1rem;
+    opacity: 0.95;
+    font-style: italic;
+}
+
+/* --- Main (Conteúdo Central) --- */
+main.container-master {
+    flex: 1;
+    width: 100%;
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+/* --- Agrupamento Flexível --- */
+.conteudo-principal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    background-color: var(--cor-branco);
+    padding: 2rem;
+    border-radius: 14px;
+    box-shadow: 0 3px 14px rgba(214, 51, 108, 0.10);
+    margin-bottom: 2rem;
+    border: 1px solid var(--cor-borda);
+}
+
+/* --- Section Esquerda (Formulário) --- */
+.form-esquerda {
+    flex: 2;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-esquerda h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.4rem;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    color: var(--cor-primaria);
+    border-bottom: 2px solid var(--cor-secundaria);
+    padding-bottom: 0.5rem;
+}
+
+.form-esquerda label {
+    font-weight: bold;
+    margin-top: 1rem;
+    margin-bottom: 0.3rem;
+    font-size: 0.95rem;
+    color: var(--cor-primaria);
+}
+
+.form-esquerda input[type="text"] {
+    width: 100%;
+    padding: 0.6rem;
+    border: 1px solid var(--cor-borda);
+    border-radius: 6px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    background-color: #fffafc;
+}
+
+.form-esquerda input:focus {
+    outline: none;
+    border-color: var(--cor-secundaria);
+    box-shadow: 0 0 0 3px rgba(255, 143, 171, 0.2);
+}
+
+.linha-id {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.linha-id input[type="text"] {
+    width: 150px;
+}
+
+/* --- Botões --- */
+input[type="button"] {
+    background-color: var(--cor-secundaria);
+    color: var(--cor-branco);
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.9rem;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+input[type="button"]:hover {
+    background-color: var(--cor-secundaria-hover);
+    transform: translateY(-2px);
+}
+
+.botoes-acao {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+}
+
+/* --- Aviso --- */
+#divAviso {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background-color: #ffe3ec;
+    color: var(--cor-aviso);
+    border-left: 5px solid var(--cor-aviso);
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+/* --- Aside Direita --- */
+.form-direita {
+    flex: 1;
+    min-width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.form-direita h2 {
+    margin-bottom: 0.5rem;
+    font-size: 1.4rem;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    color: var(--cor-primaria);
+}
+
+.instrucao-imagem {
+    font-size: 0.85rem;
+    color: #a56374;
+    margin-bottom: 1rem;
+}
+
+.img-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.img-container img {
+    max-width: 100%;
+    height: 350px;
+    object-fit: cover;
+    border: 3px dashed var(--cor-borda);
+    border-radius: 12px;
+    padding: 5px;
+    cursor: pointer;
+    transition: border-color 0.3s, transform 0.3s;
+    background-color: #fff5f8;
+}
+
+.img-container img:hover {
+    border-color: var(--cor-secundaria);
+    transform: scale(1.02);
+}
+
+/* --- Section Listagem --- */
+.lista-unidades {
+    background-color: var(--cor-branco);
+    padding: 2rem;
+    border-radius: 14px;
+    box-shadow: 0 3px 14px rgba(214, 51, 108, 0.10);
+    border: 1px solid var(--cor-borda);
+}
+
+.lista-unidades h3 {
+    margin-bottom: 1rem;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    color: var(--cor-primaria);
+    border-bottom: 2px solid var(--cor-secundaria);
+    padding-bottom: 0.5rem;
+}
+
+#outputSaida {
+    font-family: monospace;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #a56374;
+}
+
+/* --- Footer Semântico --- */
+footer {
+    background: linear-gradient(135deg, var(--cor-primaria), #ff6f9c);
+    color: var(--cor-branco);
+    text-align: center;
+    padding: 1.5rem 1rem;
+    margin-top: 2rem;
+    font-size: 0.9rem;
+    border-top: 3px solid var(--cor-destaque);
+}
+
+/* --- Responsividade --- */
+@media (max-width: 768px) {
+    .conteudo-principal {
+        flex-direction: column;
+    }
+    
+    .form-direita {
+        order: -1;
+        margin-bottom: 1.5rem;
+    }
+
+    .linha-id input[type="text"] {
+        flex: 1;
+        width: auto; 
+    }
+}

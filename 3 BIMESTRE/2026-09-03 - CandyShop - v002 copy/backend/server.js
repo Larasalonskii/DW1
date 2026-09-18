@@ -12,6 +12,8 @@ const unidadeMedidaRoutes = require('./routes/unidadeMedidaRoutes');
 const cargoRoutes = require('./routes/cargoRoutes');
 const formaPagamentoRoutes = require('./routes/formaPagamentoRoutes');
 const pessoaRoutes = require('./routes/pessoaRoutes');
+const clienteRoutes = require('./routes/clienteRoutes')
+const funcionarioRoutes = require('./routes/funcionarioRoutes')
 
 const app = express();
 
@@ -27,6 +29,8 @@ app.use('/unidade_medida', unidadeMedidaRoutes);
 app.use('/forma_pagamento', formaPagamentoRoutes);
 app.use('/cargo', cargoRoutes);
 app.use('/pessoa', pessoaRoutes)
+app.use('/cliente', clienteRoutes)
+app.use('/funcionario', funcionarioRoutes)
 
 const PORT = process.env.PORT || 3001;
 
