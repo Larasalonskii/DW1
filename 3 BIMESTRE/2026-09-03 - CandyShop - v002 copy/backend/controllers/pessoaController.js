@@ -68,10 +68,7 @@ exports.criarPessoa = async (req, res) => {
 
 exports.obterPessoa = async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    if (isNaN(id)) {
-      return res.status(400).json({ sucesso: false, mensagem: 'CPF deve ser um número válido' });
-    }
+    const id = req.params.id;
 
     const result = await query(
       'SELECT * FROM pessoa WHERE cpf_pessoa = $1',
@@ -91,7 +88,7 @@ exports.obterPessoa = async (req, res) => {
 
 exports.atualizarPessoa = async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = req.params.id;
     const { nome_pessoa, data_nascimento_pessoa, endereco_pessoa, senha_pessoa, email_pessoa } = req.body;
 
     if (email_pessoa) {
@@ -144,7 +141,7 @@ exports.atualizarPessoa = async (req, res) => {
 
 exports.deletarPessoa = async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
+    const id = req.params.id;
 
     const existingPersonResult = await query(
       'SELECT * FROM pessoa WHERE cpf_pessoa = $1',
