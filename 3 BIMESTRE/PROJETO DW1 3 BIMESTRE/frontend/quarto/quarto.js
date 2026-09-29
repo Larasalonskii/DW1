@@ -43,7 +43,7 @@ function atualizarImagemDoTipo() {
 
     // Define os caminhos das imagens baseados no ID do tipo
     // IMPORTANTE: Assumimos que as imagens finais são PNG (tipo_1.png, tipo_2.png, etc.)
-    const caminhoImagemReal = `tipo_${idTipo}.png`;
+    const caminhoImagemReal = `${URL_API}/imagens/tipo_${idTipo}.png`;
     const caminhoSkeleton = 'skeleton.svg';
 
     console.log(`Atualizando imagem para Tipo ID: ${idTipo}. Buscando: ${caminhoImagemReal}`);
@@ -78,7 +78,11 @@ function previewImagem() {
     const inputFiles = document.getElementById('inputImagem').files;
     if (inputFiles.length > 0) {
         const url = URL.createObjectURL(inputFiles[0]);
-        document.getElementById('imgQuarto').src = url;
+        // CORREÇÃO: Usando querySelector em vez de getElementById('imgQuarto')
+        const imgContainer = document.querySelector('.form-direita .img-container img');
+        if (imgContainer) {
+            imgContainer.src = url;
+        }
         mostrarAviso("Imagem escolhida! Clique em Salvar para concluir.");
     }
 }
@@ -286,3 +290,5 @@ function carregarImagemReal(img) {
         img.src = 'imagens/silhueta.png'; // Ou mantém o skeleton, como preferir
     };
 }
+
+document.querySelector('.form-direita .img-container img').addEventListener('click', acionarUpload);

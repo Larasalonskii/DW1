@@ -416,7 +416,6 @@ async function carregarPessoas() {
     try {
         const response = await fetch(`${API_BASE_URL}/pessoa`);
         const data = await response.json();
-        alert("data" + data)
         if (response.ok && data.sucesso) {
             renderizarTabelaPessoas(data.pessoas);
         } else {
