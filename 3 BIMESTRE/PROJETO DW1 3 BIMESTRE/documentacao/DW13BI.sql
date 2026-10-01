@@ -43,13 +43,13 @@ CREATE TABLE public.tipo_quarto (
 CREATE TABLE public.cliente (
     pessoa_cpf_pessoa character varying(20) NOT NULL,
     data_cadastro_cliente date,
-    frequencia_cliente integer
+    renda_cliente numeric(10,2)
 );
 
 CREATE TABLE public.funcionario (
     pessoa_cpf_pessoa character varying(20) NOT NULL,
     salario_funcionario double precision,
-    turnos_extras_funcionario integer,
+    porcentagem_comissao_funcionario numeric (5,2),
     cargo_id_cargo integer
 );
 
@@ -163,28 +163,28 @@ INSERT INTO public.tipo_quarto VALUES (2, 'Superior');
 INSERT INTO public.tipo_quarto VALUES (3, 'Luxo');
 
 -- 5.4 CLIENTE (10 registros)
-INSERT INTO public.cliente VALUES ('1', '2024-01-10', 5);
-INSERT INTO public.cliente VALUES ('2', '2024-02-15', 2);
-INSERT INTO public.cliente VALUES ('3', '2024-05-20', 1);
-INSERT INTO public.cliente VALUES ('4', '2024-06-01', 8);
-INSERT INTO public.cliente VALUES ('5', '2024-06-12', 3);
-INSERT INTO public.cliente VALUES ('6', '2024-07-04', 10);
-INSERT INTO public.cliente VALUES ('7', '2024-08-19', 4);
-INSERT INTO public.cliente VALUES ('8', '2024-09-02', 6);
-INSERT INTO public.cliente VALUES ('9', '2024-10-11', 1);
-INSERT INTO public.cliente VALUES ('10', '2024-11-25', 7);
+INSERT INTO public.cliente VALUES ('1', '2024-01-10', 3500.00);
+INSERT INTO public.cliente VALUES ('2', '2024-02-15', 2800.00);
+INSERT INTO public.cliente VALUES ('3', '2024-05-20', 4200.00);
+INSERT INTO public.cliente VALUES ('4', '2024-06-01', 5100.00);
+INSERT INTO public.cliente VALUES ('5', '2024-06-12', 3000.00);
+INSERT INTO public.cliente VALUES ('6', '2024-07-04', 6500.00);
+INSERT INTO public.cliente VALUES ('7', '2024-08-19', 2500.00);
+INSERT INTO public.cliente VALUES ('8', '2024-09-02', 7200.00);
+INSERT INTO public.cliente VALUES ('9', '2024-10-11', 3900.00);
+INSERT INTO public.cliente VALUES ('10', '2024-11-25', 4800.00);
 
 -- 5.5 FUNCIONARIO (10 registros)
-INSERT INTO public.funcionario VALUES ('11', 4500.00, 2, 3);
-INSERT INTO public.funcionario VALUES ('12', 2100.00, 5, 1);
-INSERT INTO public.funcionario VALUES ('13', 1800.00, 1, 2);
-INSERT INTO public.funcionario VALUES ('14', 1900.00, 0, 4);
-INSERT INTO public.funcionario VALUES ('15', 2800.00, 3, 5);
-INSERT INTO public.funcionario VALUES ('16', 1700.00, 4, 6);
-INSERT INTO public.funcionario VALUES ('17', 2500.00, 2, 7);
-INSERT INTO public.funcionario VALUES ('18', 1600.00, 6, 8);
-INSERT INTO public.funcionario VALUES ('19', 2300.00, 1, 9);
-INSERT INTO public.funcionario VALUES ('20', 3800.00, 0, 10);
+INSERT INTO public.funcionario VALUES ('11', 4500.00, 5.00, 3);
+INSERT INTO public.funcionario VALUES ('12', 2100.00, 2.50, 1);
+INSERT INTO public.funcionario VALUES ('13', 1800.00, 0.00, 2);
+INSERT INTO public.funcionario VALUES ('14', 1900.00, 0.00, 4);
+INSERT INTO public.funcionario VALUES ('15', 2800.00, 3.00, 5);
+INSERT INTO public.funcionario VALUES ('16', 1700.00, 0.00, 6);
+INSERT INTO public.funcionario VALUES ('17', 2500.00, 4.00, 7);
+INSERT INTO public.funcionario VALUES ('18', 1600.00, 0.00, 8);
+INSERT INTO public.funcionario VALUES ('19', 2300.00, 1.50, 9);
+INSERT INTO public.funcionario VALUES ('20', 3800.00, 6.00, 10);
 
 -- 5.6 QUARTO (10 registros: id, capacidade, tipo_quarto_id)
 -- Capacidades mantidas; tipos reapontados para Standard(1), Superior(2) e Luxo(3).
