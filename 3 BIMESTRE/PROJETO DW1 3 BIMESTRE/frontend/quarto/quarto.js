@@ -1,5 +1,6 @@
 const URL_API = 'http://localhost:3001';
-const SILHUETA_URL = `${URL_API}/imagens/silhueta.png`;
+const SKELETON_URL = `${URL_API}/imagens/tipos/skeleton.svg`;
+const SILHUETA_URL = `${URL_API}/imagens/tipos/silhueta.png`;
 
 let oQueEstaFazendo = '';
 let quarto = null;
@@ -8,6 +9,7 @@ bloquearAtributos(true);
 async function inicializar() {
     await carregarTipoQuarto();
     await listar();
+    atualizarImagemDoTipo();   // mostra a silhueta ao abrir
 }
 
 async function carregarTipoQuarto() {
@@ -26,98 +28,52 @@ async function carregarTipoQuarto() {
     }
 }
 
+// Mostra a foto do tipo selecionado (somente visualização)
 function atualizarImagemDoTipo() {
     const selectTipo = document.getElementById('selectId_tipo_quarto');
-    const imgContainer = document.querySelector('.form-direita .img-container img');
-
-    // Pega o ID do tipo selecionado (ex: "1", "2", "3")
+    const img = document.querySelector('.form-direita .img-container img');
     const idTipo = selectTipo.value;
 
     if (!idTipo) {
-        // Se não tiver tipo selecionado, volta para a silhueta padrão
-        imgContainer.src = 'skeleton.svg'; // Mostra o skeleton animado
-        imgContainer.removeAttribute('data-src'); // Remove a origem real
-        imgContainer.alt = 'Selecione um tipo de quarto';
+        img.src = SILHUETA_URL;
+        img.removeAttribute('data-src');
+        img.alt = 'Selecione um tipo de quarto';
         return;
     }
 
-    // Define os caminhos das imagens baseados no ID do tipo
-    // IMPORTANTE: Assumimos que as imagens finais são PNG (tipo_1.png, tipo_2.png, etc.)
-    const caminhoImagemReal = `${URL_API}/imagens/tipo_${idTipo}.png`;
-    const caminhoSkeleton = 'skeleton.svg';
-
-    console.log(`Atualizando imagem para Tipo ID: ${idTipo}. Buscando: ${caminhoImagemReal}`);
-
-    // Define o ID do elemento dinamicamente (para manipulação futura, se necessário)
-    imgContainer.id = `quarto-tipo-${idTipo}`;
-
-    // Define o texto alternativo corretamente
+    const caminhoImagemReal = `${URL_API}/imagens/tipos/tipo_${idTipo}.png?t=${Date.now()}`;
     const nomeTipo = selectTipo.options[selectTipo.selectedIndex].text;
-    imgContainer.alt = `${nomeTipo} - Vibe Rosa`;
 
-    // A MÁGICA DO SKELETON:
-    // 1. Voltamos a imagem visível para o skeleton animado
-    imgContainer.src = caminhoSkeleton;
+    img.id = `quarto-tipo-${idTipo}`;
+    img.alt = `${nomeTipo} - Vibe Rosa`;
 
-    // 2. Definimos no data-src onde a imagem real está
-    imgContainer.setAttribute('data-src', caminhoImagemReal);
+    // 1. Mostra o skeleton enquanto carrega
+    img.src = SKELETON_URL;
 
-    // 3. Chamamos a função de carregamento para fazer a troca
-    carregarImagemReal(imgContainer);
+    // 2. Guarda o caminho real e dispara o carregamento
+    img.setAttribute('data-src', caminhoImagemReal);
+    carregarImagemReal(img);
 }
 
-function acionarUpload() {
-    if (oQueEstaFazendo !== 'inserindo' && oQueEstaFazendo !== 'alterando') {
-        mostrarAviso("Clique em Inserir ou Alterar primeiro para poder escolher uma imagem.");
-        return;
-    }
-    document.getElementById('inputImagem').click();
-}
+// Troca o skeleton pela imagem real (ou pela silhueta se não existir)
+function carregarImagemReal(img) {
+    const imagemReal = img.getAttribute('data-src');
+    if (!imagemReal) return;
 
-function previewImagem() {
-    const inputFiles = document.getElementById('inputImagem').files;
-    if (inputFiles.length > 0) {
-        const url = URL.createObjectURL(inputFiles[0]);
-        // CORREÇÃO: Usando querySelector em vez de getElementById('imgQuarto')
-        const imgContainer = document.querySelector('.form-direita .img-container img');
-        if (imgContainer) {
-            imgContainer.src = url;
-        }
-        mostrarAviso("Imagem escolhida! Clique em Salvar para concluir.");
-    }
-}
+    const tempImg = new Image();
 
-// Salva a imagem na pasta /imagens/tipos/tipo_X.png
-async function uploadImagemParaServidor(idTipo) {
-    const inputFiles = document.getElementById('inputImagem').files;
+    tempImg.onload = () => {
+        img.src = imagemReal;
+        img.classList.add('loaded');
+    };
 
-    // Se o usuário não escolheu nenhuma imagem nova, não faz nada
-    if (inputFiles.length === 0) return;
+    tempImg.onerror = () => {
+        console.error(`❌ Erro ao carregar imagem real: ${imagemReal}`);
+        img.src = SILHUETA_URL;
+    };
 
-    if (!idTipo) {
-        mostrarAviso("Selecione um Tipo de Quarto para vincular a imagem!");
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append('imagem', inputFiles[0]);
-
-    try {
-        const resposta = await fetch(`${URL_API}/tipo_quarto/upload/${idTipo}`, {
-            method: 'POST',
-            body: formData
-        });
-        const data = await resposta.json();
-
-        if (data.sucesso) {
-            // Atualiza a imagem imediatamente após salvar
-            atualizarImagemDoTipo();
-        } else {
-            console.error("Falha no upload:", data.mensagem);
-        }
-    } catch (erro) {
-        console.error("Erro ao enviar imagem para o servidor:", erro);
-    }
+    // O src vem DEPOIS de definir onload/onerror
+    tempImg.src = imagemReal;
 }
 
 async function procurePorChavePrimaria(chave) {
@@ -155,14 +111,14 @@ function inserir() {
     bloquearAtributos(false);
     visibilidadeDosBotoes('none', 'none', 'none', 'none', 'inline');
     oQueEstaFazendo = 'inserindo';
-    mostrarAviso("INSERINDO - Digite os atributos e clique em salvar");
+    mostrarAviso("INSERINDO - Digite a capacidade, escolha o tipo e clique em salvar");
 }
 
 function alterar() {
     bloquearAtributos(false);
     visibilidadeDosBotoes('none', 'none', 'none', 'none', 'inline');
     oQueEstaFazendo = 'alterando';
-    mostrarAviso("ALTERANDO - Digite os atributos e clique em salvar");
+    mostrarAviso("ALTERANDO - Altere os atributos e clique em salvar");
 }
 
 function excluir() {
@@ -173,7 +129,7 @@ function excluir() {
 }
 
 async function salvar() {
-    let id_quarto = document.getElementById("inputId_quarto").value;
+    const id_quarto = document.getElementById("inputId_quarto").value;
     const capacidade_quarto = document.getElementById("inputCapacidade_quarto").value;
     const tipo_quarto_id = document.getElementById("selectId_tipo_quarto").value || null;
     const dadosQuarto = { id_quarto, capacidade_quarto, tipo_quarto_id };
@@ -181,11 +137,9 @@ async function salvar() {
     try {
         if (oQueEstaFazendo === 'inserindo') {
             await fetch(`${URL_API}/quarto`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dadosQuarto) });
-            await uploadImagemParaServidor(tipo_quarto_id);
             mostrarAviso("Inserido no Banco de Dados com sucesso!");
         } else if (oQueEstaFazendo === 'alterando') {
             await fetch(`${URL_API}/quarto/${id_quarto}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(dadosQuarto) });
-            await uploadImagemParaServidor(tipo_quarto_id);
             mostrarAviso("Alterado no Banco de Dados com sucesso!");
         } else if (oQueEstaFazendo === 'excluindo') {
             await fetch(`${URL_API}/quarto/${id_quarto}`, { method: 'DELETE' });
@@ -242,7 +196,6 @@ function limparAtributos() {
     oQueEstaFazendo = '';
     document.getElementById("inputCapacidade_quarto").value = "";
     document.getElementById("selectId_tipo_quarto").value = "";
-    document.getElementById("inputImagem").value = "";
     atualizarImagemDoTipo();
     bloquearAtributos(true);
 }
@@ -261,34 +214,3 @@ function visibilidadeDosBotoes(btP, btI, btA, btE, btS) {
     document.getElementById("btSalvar").style.display = btS;
     document.getElementById("btCancelar").style.display = btS;
 }
-
-// Função que faz a troca suave do Skeleton pela imagem real
-function carregarImagemReal(img) {
-    const imagemReal = img.getAttribute('data-src');
-
-    // Se não houver data-src definido, não faz nada (mantém o skeleton)
-    if (!imagemReal) return;
-
-    // Cria uma imagem temporária na memória para monitorar o carregamento
-    const tempImg = new Image();
-    tempImg.src = imagemReal;
-
-    // Quando a imagem real terminar de baixar...
-    tempImg.onload = () => {
-        console.log(`✅ Imagem real carregada com sucesso: ${imagemReal}`);
-        // ...nós trocamos o src da imagem visível na tela
-        img.src = imagemReal;
-
-        // Opcional: Adicionar uma classe CSS para animação de fade-in
-        img.classList.add('loaded');
-    };
-
-    // Tratamento de erro se a imagem não existir no servidor
-    tempImg.onerror = () => {
-        console.error(`❌ Erro ao carregar imagem real: ${imagemReal}. Mantendo silhueta.`);
-        // Se der erro, você pode definir uma imagem de "erro" ou manter a silhueta
-        img.src = 'imagens/silhueta.png'; // Ou mantém o skeleton, como preferir
-    };
-}
-
-document.querySelector('.form-direita .img-container img').addEventListener('click', acionarUpload);

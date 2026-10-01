@@ -55,10 +55,10 @@ function limparFormulario() {
     document.getElementById('checkboxFuncionario').checked = false;
     document.getElementById('salario_funcionario').value = '';
     document.getElementById('cargo_id_cargo').value = '';
-    document.getElementById('turnos_extras_funcionario').value = '';
+    document.getElementById('porcentagem_comissao_funcionario').value = '';
 
     document.getElementById('checkboxCliente').checked = false;
-    document.getElementById('frequencia_cliente').value = '';
+    document.getElementById('renda_cliente').value = '';
     document.getElementById('data_cadastro_cliente').value = '';
 }
 
@@ -100,7 +100,7 @@ async function funcaoEhFuncionario(pessoaId) {
                 ehFuncionario: true,
                 salario_funcionario: data.funcionario.salario_funcionario,
                 cargo_id_cargo: data.funcionario.cargo_id_cargo,
-                turnos_extras_funcionario: data.funcionario.turnos_extras_funcionario
+                porcentagem_comissao_funcionario: data.funcionario.porcentagem_comissao_funcionario
             };
         }
         return { ehFuncionario: false };
@@ -119,7 +119,7 @@ async function funcaoEhCliente(pessoaId) {
             const clienteObj = data.cliente || data;
             return {
                 ehCliente: true,
-                frequencia_cliente: clienteObj.frequencia_cliente,
+                renda_cliente: clienteObj.renda_cliente,
                 data_cadastro_cliente: clienteObj.data_cadastro_cliente
             };
         }
@@ -182,23 +182,23 @@ async function preencherFormulario(pessoa) {
         document.getElementById('checkboxFuncionario').checked = true;
         document.getElementById('cargo_id_cargo').value = ehFunc.cargo_id_cargo;
         document.getElementById('salario_funcionario').value = ehFunc.salario_funcionario;
-        document.getElementById('turnos_extras_funcionario').value = ehFunc.turnos_extras_funcionario;
+        document.getElementById('porcentagem_comissao_funcionario').value = ehFunc.porcentagem_comissao_funcionario;
     } else {
         document.getElementById('checkboxFuncionario').checked = false;
         document.getElementById('cargo_id_cargo').value = '';
         document.getElementById('salario_funcionario').value = '';
-        document.getElementById('turnos_extras_funcionario').value = '';
+        document.getElementById('porcentagem_comissao_funcionario').value = '';
     }
 
     // Verifica cliente
     const ehCli = await funcaoEhCliente(currentPersonId);
     if (ehCli.ehCliente) {
         document.getElementById('checkboxCliente').checked = true;
-        document.getElementById('frequencia_cliente').value = ehCli.frequencia_cliente;
+        document.getElementById('renda_cliente').value = ehCli.renda_cliente;
         document.getElementById('data_cadastro_cliente').value = converterDataParaFormatoYYYYMMDD(ehCli.data_cadastro_cliente);
     } else {
         document.getElementById('checkboxCliente').checked = false;
-        document.getElementById('frequencia_cliente').value = '';
+        document.getElementById('renda_cliente').value = '';
         document.getElementById('data_cadastro_cliente').value = '';
     }
 }
@@ -248,7 +248,7 @@ async function salvarOperacao() {
             pessoa_cpf_pessoa: pessoa.cpf_pessoa,
             salario_funcionario: document.getElementById('salario_funcionario').value,
             cargo_id_cargo: parseInt(document.getElementById('cargo_id_cargo').value, 10),
-            turnos_extras_funcionario: document.getElementById('turnos_extras_funcionario').value
+            porcentagem_comissao_funcionario: document.getElementById('porcentagem_comissao_funcionario').value
         };
     }
     const caminhoFunc = `${API_BASE_URL}/funcionario/${currentPersonId}`;
@@ -257,7 +257,7 @@ async function salvarOperacao() {
     if (document.getElementById('checkboxCliente').checked) {
         cliente = {
             pessoa_cpf_pessoa: pessoa.cpf_pessoa,
-            frequencia_cliente: document.getElementById('frequencia_cliente').value,
+            renda_cliente: document.getElementById('renda_cliente').value,
             data_cadastro_cliente: document.getElementById('data_cadastro_cliente').value || null
         };
     }
@@ -279,19 +279,14 @@ async function salvarOperacao() {
                 }
 
                 if (funcionario) {
-                    await fetch(`${API_BASE_URL}/funcionario`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(funcionario)
-                    });
+                    if (!funcionario.salario_funcionario || isNaN(funcionario.cargo_id_cargo)) {
+                        throw new Error('Pessoa criada, mas para ser funcionário informe salário e cargo.');
+                    }
+                    await enviarJSON(`${API_BASE_URL}/funcionario`, 'POST', funcionario);
                 }
 
                 if (cliente) {
-                    await fetch(`${API_BASE_URL}/cliente`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(cliente)
-                    });
+                    await enviarJSON(`${API_BASE_URL}/cliente`, 'POST', cliente);
                 }
 
                 mostrarMensagem('Pessoa incluída com sucesso!', 'success');
@@ -479,4 +474,17 @@ async function popularCargosSelect() {
         optionErro.disabled = true;
         selectCargo.appendChild(optionErro);
     }
+}
+
+async function enviarJSON(url, metodo, corpo) {
+    const resp = await fetch(url, {
+        method: metodo,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(corpo)
+    });
+    if (!resp.ok) {
+        const d = await resp.json().catch(() => ({}));
+        throw new Error(d.mensagem || d.error || `Erro ${resp.status} em ${url}`);
+    }
+    return resp;
 }

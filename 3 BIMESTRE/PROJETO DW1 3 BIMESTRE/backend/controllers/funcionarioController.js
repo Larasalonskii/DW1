@@ -27,16 +27,21 @@ exports.criarFuncionario = async (req, res) => {
     try {
         const { pessoa_cpf_pessoa, salario_funcionario, cargo_id_cargo, porcentagem_comissao_funcionario } = req.body;
 
-        if (!salario_funcionario) {
+        if (salario_funcionario === undefined || salario_funcionario === null || salario_funcionario === '') {
             return res.status(400).json({
                 sucesso: false,
                 mensagem: 'O salário do funcionário é obrigatório'
             });
         }
 
+        // Turnos extras vazios viram 0
+        const turnos = (porcentagem_comissao_funcionario === undefined || porcentagem_comissao_funcionario === '')
+            ? 0
+            : porcentagem_comissao_funcionario;
+
         const result = await query(
             'INSERT INTO funcionario (pessoa_cpf_pessoa, salario_funcionario, cargo_id_cargo, porcentagem_comissao_funcionario) VALUES ($1, $2, $3, $4) RETURNING *',
-            [pessoa_cpf_pessoa, salario_funcionario, cargo_id_cargo, porcentagem_comissao_funcionario]
+            [pessoa_cpf_pessoa, salario_funcionario, cargo_id_cargo, turnos]
         );
 
         res.status(201).json({ sucesso: true, funcionario: result.rows[0] });
@@ -50,17 +55,22 @@ exports.criarFuncionario = async (req, res) => {
             });
         }
 
+        if (error.code === '23505') {
+            return res.status(409).json({ sucesso: false, mensagem: 'Esta pessoa já é funcionário' });
+        }
+
+        if (error.code === '23503') {
+            return res.status(400).json({ sucesso: false, mensagem: 'Pessoa ou cargo informado não existe' });
+        }
+
         res.status(500).json({ sucesso: false, mensagem: 'Erro interno do servidor' });
     }
 };
 
 exports.obterFuncionario = async (req, res) => {
     try {
-        const id = parseInt(req.params.id);
-
-        if (isNaN(id)) {
-            return res.status(400).json({ sucesso: false, mensagem: 'ID deve ser um número válido' });
-        }
+        // O ID da pessoa é texto no banco, então não usamos parseInt
+        const id = req.params.id;
 
         const result = await query(
             'SELECT * FROM funcionario WHERE pessoa_cpf_pessoa = $1',
@@ -80,29 +90,31 @@ exports.obterFuncionario = async (req, res) => {
 
 exports.atualizarFuncionario = async (req, res) => {
     try {
-        const id = parseInt(req.params.id);
+        const id = req.params.id;
         const { salario_funcionario, cargo_id_cargo, porcentagem_comissao_funcionario } = req.body;
 
-        const existingPersonResult = await query(
+        const existente = await query(
             'SELECT * FROM funcionario WHERE pessoa_cpf_pessoa = $1',
             [id]
         );
 
-        if (existingPersonResult.rows.length === 0) {
+        if (existente.rows.length === 0) {
             return res.status(404).json({ sucesso: false, mensagem: 'Funcionário não encontrado' });
         }
 
-        const currentFunc = existingPersonResult.rows[0];
+        const atual = existente.rows[0];
 
-        const updatedFields = {
-            salario_funcionario: salario_funcionario !== undefined ? salario_funcionario : currentFunc.salario_funcionario,
-            cargo_id_cargo: cargo_id_cargo !== undefined ? cargo_id_cargo : currentFunc.cargo_id_cargo,
-            porcentagem_comissao_funcionario: porcentagem_comissao_funcionario !== undefined ? porcentagem_comissao_funcionario : currentFunc.porcentagem_comissao_funcionario
+        const campos = {
+            salario_funcionario: salario_funcionario !== undefined ? salario_funcionario : atual.salario_funcionario,
+            cargo_id_cargo: cargo_id_cargo !== undefined ? cargo_id_cargo : atual.cargo_id_cargo,
+            porcentagem_comissao_funcionario: (porcentagem_comissao_funcionario !== undefined && porcentagem_comissao_funcionario !== '')
+                ? porcentagem_comissao_funcionario
+                : atual.porcentagem_comissao_funcionario
         };
 
         const updateResult = await query(
             'UPDATE funcionario SET salario_funcionario = $1, cargo_id_cargo = $2, porcentagem_comissao_funcionario = $3 WHERE pessoa_cpf_pessoa = $4 RETURNING *',
-            [updatedFields.salario_funcionario, updatedFields.cargo_id_cargo, updatedFields.porcentagem_comissao_funcionario, id]
+            [campos.salario_funcionario, campos.cargo_id_cargo, campos.porcentagem_comissao_funcionario, id]
         );
 
         res.json({ sucesso: true, funcionario: updateResult.rows[0] });
@@ -114,21 +126,18 @@ exports.atualizarFuncionario = async (req, res) => {
 
 exports.deletarFuncionario = async (req, res) => {
     try {
-        const id = parseInt(req.params.id);
+        const id = req.params.id;
 
-        const existingPersonResult = await query(
+        const existente = await query(
             'SELECT * FROM funcionario WHERE pessoa_cpf_pessoa = $1',
             [id]
         );
 
-        if (existingPersonResult.rows.length === 0) {
+        if (existente.rows.length === 0) {
             return res.status(404).json({ sucesso: false, mensagem: 'Funcionário não encontrado' });
         }
 
-        await query(
-            'DELETE FROM funcionario WHERE pessoa_cpf_pessoa = $1',
-            [id]
-        );
+        await query('DELETE FROM funcionario WHERE pessoa_cpf_pessoa = $1', [id]);
 
         res.json({ sucesso: true, mensagem: 'Funcionário excluído com sucesso' });
     } catch (error) {
